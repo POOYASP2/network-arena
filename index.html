@@ -6,20 +6,22 @@
     <title>Network & Cloud Systems Quiz</title>
     <style>
       :root {
-        --bg: #f4f6f8;
+        --bg: #f4f6fb;
         --panel: #ffffff;
-        --text: #17202a;
-        --muted: #667085;
-        --border: #d9dee7;
-        --primary: #1f5eff;
-        --primary-dark: #1648c7;
-        --good: #087443;
-        --bad: #b42318;
-        --warn: #b54708;
-        --soft-good: #e7f6ee;
-        --soft-bad: #fdecec;
-        --soft-warn: #fff4e5;
-        --shadow: 0 10px 25px rgba(16, 24, 40, 0.08);
+        --text: #111827;
+        --muted: #6b7280;
+        --line: #e5e7eb;
+        --primary: #1f4ed8;
+        --primary-dark: #153aa5;
+        --danger: #b91c1c;
+        --danger-bg: #fee2e2;
+        --success: #047857;
+        --success-bg: #d1fae5;
+        --warn: #92400e;
+        --warn-bg: #fef3c7;
+        --soft: #eef2ff;
+        --shadow: 0 12px 30px rgba(15, 23, 42, 0.1);
+        --radius: 16px;
       }
 
       * {
@@ -28,83 +30,85 @@
 
       body {
         margin: 0;
-        font-family: Arial, Helvetica, sans-serif;
+        font-family:
+          Inter,
+          ui-sans-serif,
+          system-ui,
+          -apple-system,
+          BlinkMacSystemFont,
+          'Segoe UI',
+          Arial,
+          sans-serif;
         background: var(--bg);
         color: var(--text);
-        line-height: 1.45;
       }
 
       header {
-        background: #101828;
+        background: linear-gradient(135deg, #111827, #1e3a8a);
         color: white;
-        padding: 22px 18px;
-        text-align: center;
+        padding: 34px 22px 30px;
       }
 
-      header h1 {
-        margin: 0 0 6px;
-        font-size: 28px;
-        letter-spacing: -0.02em;
+      .header-inner,
+      main {
+        max-width: 1180px;
+        margin: 0 auto;
       }
 
-      header p {
-        margin: 0;
+      h1 {
+        margin: 0 0 8px;
+        font-size: clamp(28px, 5vw, 48px);
+        line-height: 1.05;
+      }
+
+      .subtitle {
         color: #cbd5e1;
-        font-size: 14px;
+        max-width: 850px;
+        margin: 0;
+        line-height: 1.55;
       }
 
       main {
-        width: min(1100px, calc(100% - 28px));
-        margin: 22px auto 60px;
+        padding: 22px;
       }
 
       .panel {
         background: var(--panel);
-        border: 1px solid var(--border);
-        border-radius: 14px;
+        border: 1px solid var(--line);
+        border-radius: var(--radius);
         box-shadow: var(--shadow);
-        padding: 20px;
+        padding: 18px;
         margin-bottom: 18px;
       }
 
-      .topbar {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        gap: 14px;
-        flex-wrap: wrap;
-        margin-bottom: 18px;
-      }
-
-      .brandline {
-        display: flex;
-        flex-direction: column;
-        gap: 2px;
-      }
-
-      .brandline strong {
-        font-size: 18px;
-      }
-      .brandline span {
-        color: var(--muted);
-        font-size: 13px;
-      }
-
-      .mode-grid {
+      .nav-grid {
         display: grid;
-        grid-template-columns: repeat(3, 1fr);
-        gap: 14px;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 12px;
       }
 
       .mode-card {
-        border: 1px solid var(--border);
-        border-radius: 12px;
+        border: 1px solid var(--line);
+        background: white;
+        border-radius: 14px;
         padding: 18px;
-        background: #fff;
-        min-height: 170px;
-        display: flex;
-        flex-direction: column;
-        justify-content: space-between;
+        cursor: pointer;
+        text-align: left;
+        transition: 0.15s ease;
+        min-height: 138px;
+        color: black;
+      }
+
+      .mode-card:hover,
+      .mode-card.active {
+        border-color: var(--primary);
+        box-shadow: 0 0 0 3px rgba(31, 78, 216, 0.12);
+        transform: translateY(-1px);
+        color: white;
+      }
+      .mode-card.active {
+        background: #c8d4f7;
+        color: black;
       }
 
       .mode-card h2 {
@@ -113,248 +117,282 @@
       }
 
       .mode-card p {
-        margin: 0 0 14px;
         color: var(--muted);
-        font-size: 14px;
+        margin: 0;
+        line-height: 1.45;
       }
 
-      .row {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 12px;
-        align-items: center;
-      }
-
-      .controls {
+      .toolbar {
         display: grid;
-        grid-template-columns: repeat(4, minmax(150px, 1fr));
+        grid-template-columns: repeat(12, 1fr);
         gap: 12px;
         align-items: end;
       }
 
-      label.control-label {
+      .field {
         display: flex;
         flex-direction: column;
         gap: 6px;
-        font-size: 13px;
-        color: var(--muted);
-        font-weight: 700;
       }
 
-      input[type='number'],
+      label,
+      .field-label {
+        font-weight: 700;
+        font-size: 13px;
+        color: #374151;
+      }
+
       select,
+      input[type='number'],
       input[type='search'] {
         width: 100%;
-        border: 1px solid var(--border);
-        border-radius: 10px;
         padding: 11px 12px;
+        border: 1px solid #d1d5db;
+        border-radius: 10px;
         font-size: 15px;
-        background: #fff;
+        background: white;
         color: var(--text);
       }
 
+      .checkbox-row {
+        display: flex;
+        gap: 10px;
+        align-items: center;
+        min-height: 44px;
+        border: 1px solid var(--line);
+        border-radius: 10px;
+        padding: 10px 12px;
+        background: #fafafa;
+      }
+
       input[type='checkbox'] {
-        transform: translateY(1px);
+        width: 18px;
+        height: 18px;
       }
 
       button {
         border: 0;
         border-radius: 10px;
-        padding: 11px 15px;
-        font-size: 15px;
-        font-weight: 700;
-        cursor: pointer;
         background: var(--primary);
         color: white;
-        transition:
-          background 0.15s ease,
-          transform 0.05s ease;
+        padding: 11px 15px;
+        font-weight: 800;
+        cursor: pointer;
+        font-size: 15px;
       }
 
       button:hover {
         background: var(--primary-dark);
       }
-      button:active {
-        transform: translateY(1px);
+      button.secondary {
+        background: #374151;
+      }
+      button.secondary:hover {
+        background: #1f2937;
+      }
+      button.ghost {
+        background: white;
+        color: var(--text);
+        border: 1px solid #d1d5db;
+      }
+      button.ghost:hover {
+        background: #f9fafb;
+      }
+      button.danger {
+        background: var(--danger);
+      }
+      button.danger:hover {
+        background: #991b1b;
       }
       button:disabled {
-        opacity: 0.55;
+        background: #9ca3af;
         cursor: not-allowed;
       }
 
-      button.secondary {
-        background: #eef2f7;
-        color: #1f2937;
-        border: 1px solid var(--border);
+      .span-2 {
+        grid-column: span 2;
+      }
+      .span-3 {
+        grid-column: span 3;
+      }
+      .span-4 {
+        grid-column: span 4;
+      }
+      .span-5 {
+        grid-column: span 5;
+      }
+      .span-6 {
+        grid-column: span 6;
+      }
+      .span-7 {
+        grid-column: span 7;
+      }
+      .span-8 {
+        grid-column: span 8;
+      }
+      .span-12 {
+        grid-column: span 12;
       }
 
-      button.secondary:hover {
-        background: #e4e9f1;
-      }
-
-      button.danger {
-        background: #b42318;
-      }
-
-      button.danger:hover {
-        background: #912018;
-      }
-
-      button.bookmark {
-        background: #fff7e6;
-        color: #7a4b00;
-        border: 1px solid #ffd58a;
-        white-space: nowrap;
-      }
-
-      button.bookmark.on {
-        background: #ffb020;
-        color: #2b1900;
-        border-color: #ffb020;
-      }
-
-      .hidden {
-        display: none !important;
-      }
-
-      .status {
-        padding: 12px 14px;
-        border-radius: 10px;
-        border: 1px solid var(--border);
-        color: var(--muted);
-        background: #fff;
-        margin-bottom: 16px;
-        font-size: 14px;
-      }
-
-      .status.good {
-        color: var(--good);
-        background: var(--soft-good);
-        border-color: #adddc3;
-      }
-      .status.bad {
-        color: var(--bad);
-        background: var(--soft-bad);
-        border-color: #f3b4b0;
-      }
-      .status.warn {
-        color: var(--warn);
-        background: var(--soft-warn);
-        border-color: #ffd79a;
-      }
-
-      .question-card {
-        border: 1px solid var(--border);
-        border-radius: 12px;
-        background: #fff;
-        padding: 18px;
-        margin-bottom: 14px;
-      }
-
-      .question-head {
+      .stats {
         display: flex;
-        align-items: flex-start;
-        justify-content: space-between;
-        gap: 12px;
-        margin-bottom: 10px;
-      }
-
-      .question-title {
-        margin: 0;
-        font-size: 17px;
-        font-weight: 800;
-      }
-
-      .meta {
-        display: flex;
-        gap: 6px;
         flex-wrap: wrap;
-        margin-top: 8px;
+        gap: 8px;
+        margin-top: 12px;
       }
 
       .pill {
-        display: inline-block;
-        border: 1px solid var(--border);
-        background: #f8fafc;
-        color: #475467;
         border-radius: 999px;
-        padding: 4px 9px;
-        font-size: 12px;
+        padding: 7px 10px;
+        background: #f3f4f6;
+        color: #374151;
+        font-size: 13px;
         font-weight: 700;
       }
 
       .pill.warn {
-        background: var(--soft-warn);
+        background: var(--warn-bg);
         color: var(--warn);
-        border-color: #ffd79a;
+      }
+      .pill.good {
+        background: var(--success-bg);
+        color: var(--success);
+      }
+      .pill.bad {
+        background: var(--danger-bg);
+        color: var(--danger);
+      }
+
+      .question-card {
+        background: white;
+        border: 1px solid var(--line);
+        border-radius: 16px;
+        padding: 18px;
+        margin-bottom: 14px;
+      }
+
+      .question-top {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        gap: 12px;
+        margin-bottom: 10px;
+      }
+
+      .question-meta {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 6px;
+        margin-bottom: 10px;
+      }
+
+      .question-text {
+        font-size: 17px;
+        line-height: 1.5;
+        font-weight: 700;
+        white-space: pre-wrap;
       }
 
       .options {
         display: grid;
         gap: 9px;
-        margin-top: 12px;
+        margin-top: 14px;
       }
 
       .option {
+        border: 1px solid #d1d5db;
+        border-radius: 12px;
+        padding: 12px 12px;
         display: flex;
         gap: 10px;
         align-items: flex-start;
-        border: 1px solid var(--border);
-        border-radius: 10px;
-        padding: 11px 12px;
         cursor: pointer;
         background: #fff;
+        line-height: 1.35;
       }
 
       .option:hover {
-        background: #f8fafc;
+        background: #f9fafb;
       }
       .option input {
-        margin-top: 3px;
+        margin-top: 2px;
       }
       .option.correct {
-        background: var(--soft-good);
-        border-color: #91d6b1;
+        border-color: var(--success);
+        background: var(--success-bg);
       }
       .option.wrong {
-        background: var(--soft-bad);
-        border-color: #f3b4b0;
+        border-color: var(--danger);
+        background: var(--danger-bg);
+      }
+      .option.disabled {
+        cursor: default;
       }
 
       .feedback {
-        margin-top: 12px;
-        padding: 12px 14px;
-        border-radius: 10px;
-        font-size: 14px;
+        border-radius: 12px;
+        padding: 12px;
+        margin-top: 14px;
+        font-weight: 700;
+        line-height: 1.4;
       }
-
       .feedback.good {
-        color: var(--good);
-        background: var(--soft-good);
+        background: var(--success-bg);
+        color: var(--success);
       }
       .feedback.bad {
-        color: var(--bad);
-        background: var(--soft-bad);
+        background: var(--danger-bg);
+        color: var(--danger);
       }
-      .feedback.neutral {
-        color: #475467;
-        background: #f2f4f7;
+      .feedback.warn {
+        background: var(--warn-bg);
+        color: var(--warn);
+      }
+
+      .actions {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+        margin-top: 14px;
+        align-items: center;
+      }
+
+      .bookmark-btn {
+        background: white;
+        color: #111827;
+        border: 1px solid #d1d5db;
+        padding: 8px 10px;
+        white-space: nowrap;
+      }
+      .bookmark-btn.active {
+        background: #fef3c7;
+        border-color: #f59e0b;
+        color: #92400e;
+      }
+
+      .empty {
+        border: 1px dashed #cbd5e1;
+        border-radius: 16px;
+        background: #f8fafc;
+        padding: 24px;
+        color: var(--muted);
+        text-align: center;
+        line-height: 1.55;
       }
 
       .score-box {
         display: grid;
-        grid-template-columns: repeat(4, 1fr);
-        gap: 12px;
-        margin-bottom: 14px;
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+        gap: 10px;
+        margin-bottom: 16px;
       }
 
       .score-item {
-        border: 1px solid var(--border);
+        background: #f8fafc;
+        border: 1px solid var(--line);
         border-radius: 12px;
         padding: 14px;
-        background: #fff;
       }
-
       .score-item strong {
         display: block;
         font-size: 24px;
@@ -362,952 +400,986 @@
       .score-item span {
         color: var(--muted);
         font-size: 13px;
+        font-weight: 700;
       }
 
-      .sticky-actions {
-        position: sticky;
-        bottom: 0;
-        background: rgba(244, 246, 248, 0.92);
-        backdrop-filter: blur(6px);
-        border-top: 1px solid var(--border);
-        padding: 14px 0;
-        margin-top: 16px;
-      }
-
-      .review-list {
-        max-height: 520px;
-        overflow: auto;
-        padding-right: 4px;
-      }
-
-      .small {
-        font-size: 13px;
+      .small-note {
         color: var(--muted);
+        font-size: 13px;
+        line-height: 1.5;
+        margin-top: 8px;
       }
 
-      .file-load {
-        border: 1px dashed var(--border);
-        padding: 14px;
-        border-radius: 12px;
-        background: #fbfcfe;
+      .loading,
+      .error {
+        padding: 20px;
+        border-radius: 14px;
+        background: white;
+        border: 1px solid var(--line);
+      }
+      .error {
+        color: var(--danger);
+        background: var(--danger-bg);
       }
 
       @media (max-width: 850px) {
-        .mode-grid {
-          grid-template-columns: 1fr;
-        }
-        .controls {
-          grid-template-columns: 1fr;
-        }
+        .nav-grid,
         .score-box {
-          grid-template-columns: repeat(2, 1fr);
+          grid-template-columns: 1fr;
         }
-        .question-head {
+        .toolbar {
+          grid-template-columns: 1fr;
+        }
+        .span-2,
+        .span-3,
+        .span-4,
+        .span-5,
+        .span-6,
+        .span-7,
+        .span-8,
+        .span-12 {
+          grid-column: span 1;
+        }
+        .question-top {
           flex-direction: column;
+        }
+        header {
+          padding-top: 26px;
         }
       }
     </style>
   </head>
   <body>
     <header>
-      <h1>Network & Cloud Systems Quiz</h1>
-      <p>Exam simulation, subject mastery, and bookmarked-question practice.</p>
+      <div class="header-inner">
+        <h1>Network & Cloud Systems Quiz</h1>
+        <p class="subtitle">
+          Three modes: real exam simulation, subject mastery, and bookmarked
+          questions. Filters rebuild the question pool automatically.
+        </p>
+      </div>
     </header>
 
     <main>
-      <section class="panel topbar">
-        <div class="brandline">
-          <strong id="bankTitle">Loading question bank...</strong>
-          <span id="bankStats">No data loaded yet.</span>
-        </div>
-        <div class="row">
-          <button class="secondary" id="homeBtn">Home</button>
-          <button class="secondary" id="reloadBtn">Reload JSON</button>
-        </div>
-      </section>
-
-      <div id="status" class="status">
-        Loading questions from <code>./data/questions.json</code>...
-      </div>
-
-      <section id="fileFallback" class="panel file-load hidden">
-        <strong>JSON file was not loaded automatically.</strong>
-        <p class="small">
-          For GitHub Pages, put the question bank at
-          <code>data/questions.json</code>. For local testing, select the JSON
-          file manually.
-        </p>
-        <input type="file" id="jsonFileInput" accept="application/json,.json" />
-      </section>
-
-      <section id="homeView" class="panel hidden">
-        <div class="mode-grid">
-          <div class="mode-card">
-            <div>
-              <h2>1. Simulate real exam</h2>
-              <p>
-                Random questions, shuffled options, negative marking, and
-                correct answers shown only after submit.
-              </p>
-            </div>
-            <button id="openExamBtn">Start exam mode</button>
-          </div>
-          <div class="mode-card">
-            <div>
-              <h2>2. Master one subject</h2>
-              <p>
-                Choose a section, answer one question at a time, and see the
-                correct answer immediately after a mistake.
-              </p>
-            </div>
-            <button id="openMasteryBtn">Start mastery mode</button>
-          </div>
-          <div class="mode-card">
-            <div>
-              <h2>3. Bookmarked questions</h2>
-              <p>
-                Practice saved questions later. Bookmarks are stored in this
-                browser with localStorage.
-              </p>
-            </div>
-            <button id="openBookmarksBtn">Open bookmarks</button>
-          </div>
-        </div>
-      </section>
-
-      <section id="examSetupView" class="panel hidden">
-        <h2>Real exam simulation</h2>
-        <div class="controls">
-          <label class="control-label"
-            >Number of questions
-            <input type="number" id="examCount" min="1" value="30" />
-          </label>
-          <label class="control-label"
-            >Section
-            <select id="examSectionSelect"></select>
-          </label>
-          <label class="control-label"
-            >Question quality
-            <select id="examQualitySelect">
-              <option value="safe">Exclude manual-review questions</option>
-              <option value="all">Include all answered questions</option>
-            </select>
-          </label>
-          <button id="startExamBtn">Generate exam</button>
-        </div>
-        <p class="small">
-          Scoring uses the JSON config when available. Default: +1 correct,
-          -0.33 wrong, 0 unanswered.
-        </p>
-      </section>
-
-      <section id="masterySetupView" class="panel hidden">
-        <h2>Master one subject</h2>
-        <div class="controls">
-          <label class="control-label"
-            >Section
-            <select id="masterySectionSelect"></select>
-          </label>
-          <label class="control-label"
-            >Question quality
-            <select id="masteryQualitySelect">
-              <option value="safe">Exclude manual-review questions</option>
-              <option value="all">Include all answered questions</option>
-            </select>
-          </label>
-          <label class="control-label"
-            >Search within chosen section
-            <input
-              type="search"
-              id="masterySearch"
-              placeholder="Optional keyword"
-            />
-          </label>
-          <button id="startMasteryBtn">Start practice</button>
-        </div>
-      </section>
-
-      <section id="bookmarkSetupView" class="panel hidden">
-        <h2>Bookmarked questions</h2>
-        <p class="small" id="bookmarkInfo"></p>
-        <div class="row">
-          <button id="startBookmarksBtn">Practice bookmarks</button>
-          <button class="secondary" id="showBookmarkListBtn">
-            Show bookmark list
-          </button>
-          <button class="danger" id="clearBookmarksBtn">
-            Clear all bookmarks
-          </button>
-        </div>
-        <div id="bookmarkList" class="review-list hidden"></div>
-      </section>
-
-      <section id="quizView" class="hidden"></section>
-      <section id="resultView" class="hidden"></section>
+      <div id="root"></div>
     </main>
 
-    <script>
+    <script
+      crossorigin
+      src="https://unpkg.com/react@18/umd/react.production.min.js"
+    ></script>
+    <script
+      crossorigin
+      src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"
+    ></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+
+    <script type="text/babel">
+      const { useEffect, useMemo, useState } = React;
+
+      const BOOKMARK_KEY = 'ncs_bookmarked_question_ids_v1';
       const DATA_PATHS = [
         './data/questions.json',
         './questions.json',
         './questions_unified_answered_deduplicated.json',
       ];
 
-      const app = {
-        bank: null,
-        questions: [],
-        rendered: [],
-        mode: null,
-        masteryIndex: 0,
-        masteryStats: { correct: 0, wrong: 0, answered: 0 },
-        bookmarkKey: 'ncs_bookmarked_question_ids_v1',
-        bookmarks: new Set(),
-      };
-
-      const $ = (id) => document.getElementById(id);
-
-      function showStatus(message, type = '') {
-        const el = $('status');
-        el.className = 'status' + (type ? ' ' + type : '');
-        el.innerHTML = message;
-        el.classList.remove('hidden');
-      }
-
-      function hideStatus() {
-        $('status').classList.add('hidden');
-      }
-
-      function showOnly(viewId) {
-        const views = [
-          'homeView',
-          'examSetupView',
-          'masterySetupView',
-          'bookmarkSetupView',
-          'quizView',
-          'resultView',
-        ];
-        views.forEach((id) => $(id).classList.add('hidden'));
-        if (viewId) $(viewId).classList.remove('hidden');
-        window.scrollTo({ top: 0, behavior: 'smooth' });
-      }
-
-      function escapeHtml(value) {
+      function normalizeText(value) {
         return String(value ?? '')
-          .replaceAll('&', '&amp;')
-          .replaceAll('<', '&lt;')
-          .replaceAll('>', '&gt;')
-          .replaceAll('"', '&quot;')
-          .replaceAll("'", '&#039;');
+          .replace(/\s+/g, ' ')
+          .trim();
       }
 
-      function shuffle(array) {
-        const copy = [...array];
-        for (let i = copy.length - 1; i > 0; i--) {
-          const j = Math.floor(Math.random() * (i + 1));
-          [copy[i], copy[j]] = [copy[j], copy[i]];
-        }
-        return copy;
-      }
-
-      function normalizeQuestion(q, index) {
-        const options = Array.isArray(q.options) ? q.options.map(String) : [];
-        let answerIndex = Number.isInteger(q.answerIndex)
-          ? q.answerIndex
-          : null;
-        if (answerIndex === null && q.answer) {
-          const found = options.findIndex(
-            (opt) => opt.trim() === String(q.answer).trim(),
-          );
-          answerIndex = found >= 0 ? found : null;
-        }
-
-        const subjectId = q.sectionId || q.subjectId || 'general';
-        const subject = q.section || q.subject || subjectId;
-
-        return {
-          ...q,
-          id: q.id || 'q-' + String(index + 1).padStart(4, '0'),
-          subjectId,
-          subject,
-          sectionId: subjectId,
-          section: subject,
-          question: String(q.question || '').trim(),
-          options,
-          answerIndex,
-          answer: answerIndex !== null ? options[answerIndex] : q.answer || '',
-          examEligible: q.examEligible !== false,
-          masteryEligible: q.masteryEligible !== false,
-          reviewNeeded: q.reviewNeeded === true,
-          answerConfidence: q.answerConfidence || q.confidence || 'unknown',
-        };
-      }
-
-      function answered(q) {
+      function slugify(value) {
         return (
+          normalizeText(value)
+            .toLowerCase()
+            .replace(/[^a-z0-9]+/g, '-')
+            .replace(/(^-|-$)/g, '') || 'unknown'
+        );
+      }
+
+      function getSectionName(q) {
+        return normalizeText(q.section || q.subject || 'Unknown / OCR review');
+      }
+
+      function getSectionId(q) {
+        return normalizeText(
+          q.sectionId || q.subjectId || slugify(getSectionName(q)),
+        );
+      }
+
+      function isReviewQuestion(q) {
+        const section = getSectionName(q).toLowerCase();
+        return Boolean(
+          q.reviewNeeded === true ||
+          q.manualReview === true ||
+          q.needsReview === true ||
+          section.includes('ocr') ||
+          section.includes('unknown') ||
+          String(q.answerConfidence || '').toLowerCase() === 'low',
+        );
+      }
+
+      function isAnswerable(q) {
+        return (
+          Array.isArray(q.options) &&
+          q.options.length >= 2 &&
           Number.isInteger(q.answerIndex) &&
           q.answerIndex >= 0 &&
           q.answerIndex < q.options.length
         );
       }
 
-      function loadBookmarks() {
-        try {
-          const raw = localStorage.getItem(app.bookmarkKey);
-          app.bookmarks = new Set(raw ? JSON.parse(raw) : []);
-        } catch {
-          app.bookmarks = new Set();
-        }
-      }
-
-      function saveBookmarks() {
-        localStorage.setItem(
-          app.bookmarkKey,
-          JSON.stringify([...app.bookmarks]),
-        );
-        updateBookmarkInfo();
-      }
-
-      function isBookmarked(id) {
-        return app.bookmarks.has(id);
-      }
-
-      function toggleBookmark(id) {
-        if (app.bookmarks.has(id)) app.bookmarks.delete(id);
-        else app.bookmarks.add(id);
-        saveBookmarks();
-        document
-          .querySelectorAll('[data-bookmark-id="' + CSS.escape(id) + '"]')
-          .forEach((btn) => {
-            const on = app.bookmarks.has(id);
-            btn.classList.toggle('on', on);
-            btn.textContent = on ? '★ Bookmarked' : '☆ Bookmark';
-          });
-      }
-
-      function attachBookmarkEvents() {
-        document.querySelectorAll('[data-bookmark-id]').forEach((btn) => {
-          btn.onclick = () => toggleBookmark(btn.dataset.bookmarkId);
-        });
-      }
-
-      function sectionOptionsHtml(includeAll = true) {
-        const map = new Map();
-        app.questions.forEach((q) => {
-          if (!map.has(q.sectionId)) map.set(q.sectionId, q.section);
-        });
-        const sorted = [...map.entries()].sort((a, b) =>
-          a[1].localeCompare(b[1]),
-        );
-        const all = includeAll
-          ? '<option value="__all__">All sections</option>'
-          : '';
-        return (
-          all +
-          sorted
-            .map(([id, name]) => {
-              const count = app.questions.filter(
-                (q) => q.sectionId === id && answered(q),
-              ).length;
-              return (
-                '<option value="' +
-                escapeHtml(id) +
-                '">' +
-                escapeHtml(name) +
-                ' (' +
-                count +
-                ')</option>'
-              );
-            })
-            .join('')
+      function getCorrectText(q) {
+        return normalizeText(
+          q.answer ||
+            (Array.isArray(q.options) ? q.options[q.answerIndex] : ''),
         );
       }
 
-      function updateBookmarkInfo() {
-        const count = app.bookmarks.size;
-        if ($('bookmarkInfo')) {
-          $('bookmarkInfo').textContent =
-            count +
-            ' bookmarked question' +
-            (count === 1 ? '' : 's') +
-            ' saved in this browser.';
-        }
+      function prepareQuestion(q) {
+        return {
+          ...q,
+          _section: getSectionName(q),
+          _sectionId: getSectionId(q),
+          _review: isReviewQuestion(q),
+          _answerable: isAnswerable(q),
+          _correctText: getCorrectText(q),
+        };
       }
 
-      function updateBankUi() {
-        const answeredCount = app.questions.filter(answered).length;
-        const reviewCount = app.questions.filter((q) => q.reviewNeeded).length;
-        const sections = new Set(app.questions.map((q) => q.sectionId)).size;
-        $('bankTitle').textContent = app.bank?.title || 'Question Bank';
-        $('bankStats').textContent =
-          answeredCount +
-          ' answered questions · ' +
-          sections +
-          ' sections · ' +
-          reviewCount +
-          ' manual-review item(s)';
-        $('examSectionSelect').innerHTML = sectionOptionsHtml(true);
-        $('masterySectionSelect').innerHTML = sectionOptionsHtml(false);
-        $('fileFallback').classList.add('hidden');
-        updateBookmarkInfo();
+      function shuffle(array) {
+        const arr = [...array];
+        for (let i = arr.length - 1; i > 0; i--) {
+          const j = Math.floor(Math.random() * (i + 1));
+          [arr[i], arr[j]] = [arr[j], arr[i]];
+        }
+        return arr;
       }
 
-      function validateBank(data) {
-        if (!data || !Array.isArray(data.questions)) {
-          throw new Error(
-            'Invalid JSON: expected an object with a questions array.',
-          );
-        }
-        app.bank = data;
-        app.bookmarkKey = data.storage?.bookmarkStorageKey || app.bookmarkKey;
-        app.questions = data.questions
-          .map(normalizeQuestion)
-          .filter((q) => q.question && q.options.length >= 2);
-        loadBookmarks();
-        updateBankUi();
+      function buildPlayableQuestion(q) {
+        const correctText = getCorrectText(q);
+        const options = shuffle(
+          q.options.map((text, originalIndex) => ({ text, originalIndex })),
+        );
+        const shuffledAnswerIndex = options.findIndex(
+          (opt) => normalizeText(opt.text) === correctText,
+        );
+        return {
+          ...q,
+          _playOptions: options,
+          _playAnswerIndex:
+            shuffledAnswerIndex >= 0 ? shuffledAnswerIndex : q.answerIndex,
+          _correctText: correctText,
+        };
       }
 
       async function loadQuestionBank() {
-        showStatus('Loading question bank...', '');
-        $('fileFallback').classList.add('hidden');
-
-        const urlParams = new URLSearchParams(location.search);
-        const customPath = urlParams.get('data');
-        const paths = customPath ? [customPath, ...DATA_PATHS] : DATA_PATHS;
         const errors = [];
-
-        for (const path of paths) {
+        for (const path of DATA_PATHS) {
           try {
             const response = await fetch(path, { cache: 'no-store' });
             if (!response.ok)
-              throw new Error(response.status + ' ' + response.statusText);
-            const data = await response.json();
-            validateBank(data);
-            hideStatus();
-            showOnly('homeView');
-            return;
+              throw new Error(`${response.status} ${response.statusText}`);
+            const json = await response.json();
+            const questions = Array.isArray(json.questions)
+              ? json.questions
+              : [];
+            return { json, questions: questions.map(prepareQuestion), path };
           } catch (err) {
-            errors.push(path + ': ' + err.message);
+            errors.push(`${path}: ${err.message}`);
           }
         }
-
-        showStatus(
-          'Could not auto-load JSON. Put your file at <code>data/questions.json</code>, or use the manual file picker below.',
-          'warn',
-        );
-        $('fileFallback').classList.remove('hidden');
-        console.warn('JSON load failures:', errors);
+        throw new Error(errors.join(' | '));
       }
 
-      function filteredQuestions({
-        sectionId = '__all__',
-        quality = 'safe',
-        mode = 'exam',
-        search = '',
-      } = {}) {
-        const searchLower = search.trim().toLowerCase();
-        return app.questions.filter((q) => {
-          if (!answered(q)) return false;
-          if (mode === 'exam' && !q.examEligible) return false;
-          if (mode === 'mastery' && !q.masteryEligible) return false;
-          if (quality === 'safe' && q.reviewNeeded) return false;
-          if (sectionId !== '__all__' && q.sectionId !== sectionId)
-            return false;
-          if (searchLower) {
-            const haystack = [q.question, q.section, ...(q.options || [])]
+      function readBookmarks() {
+        try {
+          const raw = localStorage.getItem(BOOKMARK_KEY);
+          const parsed = raw ? JSON.parse(raw) : [];
+          return Array.isArray(parsed) ? parsed : [];
+        } catch {
+          return [];
+        }
+      }
+
+      function saveBookmarks(ids) {
+        localStorage.setItem(BOOKMARK_KEY, JSON.stringify(ids));
+      }
+
+      function buildSections(questions) {
+        const map = new Map();
+        questions.forEach((q) => {
+          if (!map.has(q._sectionId)) {
+            map.set(q._sectionId, {
+              id: q._sectionId,
+              name: q._section,
+              count: 0,
+            });
+          }
+          map.get(q._sectionId).count += 1;
+        });
+        return [...map.values()].sort((a, b) => a.name.localeCompare(b.name));
+      }
+
+      function FilterPanel({
+        excludeReview,
+        setExcludeReview,
+        search,
+        setSearch,
+        filteredCount,
+        totalCount,
+        answerableCount,
+        reviewCount,
+        dataPath,
+        onFilterChangeSideEffect,
+      }) {
+        function handleExcludeChange(e) {
+          setExcludeReview(e.target.checked);
+          onFilterChangeSideEffect?.();
+        }
+        function handleSearchChange(e) {
+          setSearch(e.target.value);
+          onFilterChangeSideEffect?.();
+        }
+        return (
+          <section className='panel'>
+            <div className='toolbar'>
+              <div className='field span-5'>
+                <label>Search in questions/options</label>
+                <input
+                  value={search}
+                  onChange={handleSearchChange}
+                  type='search'
+                  placeholder='Example: OSPF, IPv6, token bucket'
+                />
+              </div>
+              <div className='field span-4'>
+                <span className='field-label'>Quality filter</span>
+                <label className='checkbox-row'>
+                  <input
+                    type='checkbox'
+                    checked={excludeReview}
+                    onChange={handleExcludeChange}
+                  />
+                  Exclude manual / OCR review questions
+                </label>
+              </div>
+              <div className='field span-3'>
+                <span className='field-label'>Loaded from</span>
+                <div className='checkbox-row' style={{ fontWeight: 700 }}>
+                  {dataPath}
+                </div>
+              </div>
+            </div>
+            <div className='stats'>
+              <span className='pill'>Current pool: {filteredCount}</span>
+              <span className='pill'>Total loaded: {totalCount}</span>
+              <span className='pill good'>Answerable: {answerableCount}</span>
+              <span className='pill warn'>Review/OCR: {reviewCount}</span>
+            </div>
+            <p className='small-note'>
+              In this React version, changing the checkbox/search recalculates
+              the pool, rebuilds section counts, and clears old generated
+              exams/practice sessions so stale questions cannot remain.
+            </p>
+          </section>
+        );
+      }
+
+      function ModeSelector({ mode, setMode, bookmarkCount }) {
+        const modes = [
+          {
+            id: 'exam',
+            title: '1) Simulate real exam',
+            desc: 'Random exam, shuffled options, submit at the end, negative marking.',
+          },
+          {
+            id: 'mastery',
+            title: '2) Master one subject',
+            desc: 'Choose one section, answer one by one, get the correct answer immediately.',
+          },
+          {
+            id: 'bookmarks',
+            title: `3) Bookmarked questions (${bookmarkCount})`,
+            desc: 'Review questions saved in this browser. Bookmarks work across tabs.',
+          },
+        ];
+        return (
+          <section className='panel'>
+            <div className='nav-grid'>
+              {modes.map((item) => (
+                <button
+                  key={item.id}
+                  className={`mode-card ${mode === item.id ? 'active' : ''}`}
+                  onClick={() => setMode(item.id)}
+                >
+                  <h2>{item.title}</h2>
+                  <p>{item.desc}</p>
+                </button>
+              ))}
+            </div>
+          </section>
+        );
+      }
+
+      function BookmarkButton({ id, bookmarks, toggleBookmark }) {
+        const active = bookmarks.includes(id);
+        return (
+          <button
+            className={`bookmark-btn ${active ? 'active' : ''}`}
+            onClick={() => toggleBookmark(id)}
+            type='button'
+          >
+            {active ? '★ Bookmarked' : '☆ Bookmark'}
+          </button>
+        );
+      }
+
+      function QuestionMeta({ q }) {
+        return (
+          <div className='question-meta'>
+            <span className='pill'>{q._section}</span>
+            {q.source && <span className='pill'>{q.source}</span>}
+            {q.page && <span className='pill'>Page {q.page}</span>}
+            {q._review && <span className='pill warn'>Review/OCR</span>}
+            {!q._answerable && (
+              <span className='pill bad'>No verified answer</span>
+            )}
+          </div>
+        );
+      }
+
+      function ExamQuestion({
+        q,
+        index,
+        selectedIndex,
+        onSelect,
+        submitted,
+        bookmarks,
+        toggleBookmark,
+      }) {
+        return (
+          <article className='question-card'>
+            <div className='question-top'>
+              <div>
+                <QuestionMeta q={q} />
+                <div className='question-text'>
+                  Q{index + 1}. {q.question}
+                </div>
+              </div>
+              <BookmarkButton
+                id={q.id}
+                bookmarks={bookmarks}
+                toggleBookmark={toggleBookmark}
+              />
+            </div>
+            <div className='options'>
+              {q._playOptions.map((opt, i) => {
+                const isCorrect = i === q._playAnswerIndex;
+                const isSelected = selectedIndex === i;
+                let className = 'option';
+                if (submitted && isCorrect) className += ' correct';
+                if (submitted && isSelected && !isCorrect)
+                  className += ' wrong';
+                if (submitted) className += ' disabled';
+                return (
+                  <label className={className} key={`${q.id}-${i}`}>
+                    <input
+                      type='radio'
+                      name={`exam-${q.id}`}
+                      checked={selectedIndex === i}
+                      disabled={submitted}
+                      onChange={() => onSelect(q.id, i)}
+                    />
+                    <span>{opt.text}</span>
+                  </label>
+                );
+              })}
+            </div>
+            {submitted &&
+              selectedIndex !== undefined &&
+              selectedIndex !== q._playAnswerIndex && (
+                <div className='feedback bad'>
+                  Correct answer: {q._correctText}
+                </div>
+              )}
+            {submitted && selectedIndex === undefined && (
+              <div className='feedback warn'>
+                Not answered. Correct answer: {q._correctText}
+              </div>
+            )}
+          </article>
+        );
+      }
+
+      function ExamMode({
+        questions,
+        sections,
+        bookmarks,
+        toggleBookmark,
+        resetSignal,
+      }) {
+        const [sectionId, setSectionId] = useState('all');
+        const [count, setCount] = useState(30);
+        const [examQuestions, setExamQuestions] = useState([]);
+        const [answers, setAnswers] = useState({});
+        const [submitted, setSubmitted] = useState(false);
+
+        useEffect(() => {
+          setExamQuestions([]);
+          setAnswers({});
+          setSubmitted(false);
+        }, [resetSignal]);
+
+        const pool = useMemo(() => {
+          return questions.filter(
+            (q) =>
+              q._answerable &&
+              q.examEligible !== false &&
+              (sectionId === 'all' || q._sectionId === sectionId),
+          );
+        }, [questions, sectionId]);
+
+        function generateExam() {
+          const selected = shuffle(pool)
+            .slice(0, Math.min(Number(count) || 1, pool.length))
+            .map(buildPlayableQuestion);
+          setExamQuestions(selected);
+          setAnswers({});
+          setSubmitted(false);
+        }
+
+        function changeSection(e) {
+          setSectionId(e.target.value);
+          setExamQuestions([]);
+          setAnswers({});
+          setSubmitted(false);
+        }
+
+        function selectAnswer(id, idx) {
+          setAnswers((prev) => ({ ...prev, [id]: idx }));
+        }
+
+        const score = useMemo(() => {
+          let correct = 0,
+            wrong = 0,
+            unanswered = 0;
+          examQuestions.forEach((q) => {
+            const selected = answers[q.id];
+            if (selected === undefined) unanswered += 1;
+            else if (selected === q._playAnswerIndex) correct += 1;
+            else wrong += 1;
+          });
+          return { correct, wrong, unanswered, total: correct - wrong * 0.33 };
+        }, [answers, examQuestions]);
+
+        return (
+          <section className='panel'>
+            <h2>Simulate real exam</h2>
+            <div className='toolbar'>
+              <div className='field span-6'>
+                <label>Section</label>
+                <select value={sectionId} onChange={changeSection}>
+                  <option value='all'>
+                    All filtered answerable questions (
+                    {
+                      questions.filter(
+                        (q) => q._answerable && q.examEligible !== false,
+                      ).length
+                    }
+                    )
+                  </option>
+                  {sections.map((s) => (
+                    <option key={s.id} value={s.id}>
+                      {s.name} (
+                      {
+                        questions.filter(
+                          (q) =>
+                            q._answerable &&
+                            q.examEligible !== false &&
+                            q._sectionId === s.id,
+                        ).length
+                      }
+                      )
+                    </option>
+                  ))}
+                </select>
+              </div>
+              <div className='field span-2'>
+                <label>Questions</label>
+                <input
+                  type='number'
+                  min='1'
+                  max={pool.length || 1}
+                  value={count}
+                  onChange={(e) => setCount(e.target.value)}
+                />
+              </div>
+              <div className='field span-4'>
+                <button onClick={generateExam} disabled={pool.length === 0}>
+                  Generate exam from current pool
+                </button>
+              </div>
+            </div>
+            <div className='stats'>
+              <span className='pill'>
+                Available for this exam: {pool.length}
+              </span>
+              <span className='pill'>Generated: {examQuestions.length}</span>
+              <span className='pill warn'>Score: +1 / -0.33 / 0</span>
+            </div>
+
+            {examQuestions.length === 0 ? (
+              <div className='empty'>
+                Generate an exam. If the pool is empty, change the filter or
+                choose another section.
+              </div>
+            ) : (
+              <>
+                {submitted && (
+                  <div className='score-box'>
+                    <div className='score-item'>
+                      <strong>{score.total.toFixed(2)}</strong>
+                      <span>Final score</span>
+                    </div>
+                    <div className='score-item'>
+                      <strong>{score.correct}</strong>
+                      <span>Correct</span>
+                    </div>
+                    <div className='score-item'>
+                      <strong>{score.wrong}</strong>
+                      <span>Wrong</span>
+                    </div>
+                    <div className='score-item'>
+                      <strong>{score.unanswered}</strong>
+                      <span>Unanswered</span>
+                    </div>
+                  </div>
+                )}
+                <div className='actions'>
+                  {!submitted && (
+                    <button onClick={() => setSubmitted(true)}>
+                      Submit exam
+                    </button>
+                  )}
+                  <button className='ghost' onClick={generateExam}>
+                    Regenerate
+                  </button>
+                </div>
+                <div style={{ marginTop: 14 }}>
+                  {examQuestions.map((q, i) => (
+                    <ExamQuestion
+                      key={q.id}
+                      q={q}
+                      index={i}
+                      selectedIndex={answers[q.id]}
+                      onSelect={selectAnswer}
+                      submitted={submitted}
+                      bookmarks={bookmarks}
+                      toggleBookmark={toggleBookmark}
+                    />
+                  ))}
+                </div>
+              </>
+            )}
+          </section>
+        );
+      }
+
+      function MasteryMode({
+        questions,
+        sections,
+        bookmarks,
+        toggleBookmark,
+        resetSignal,
+      }) {
+        const [sectionId, setSectionId] = useState(sections[0]?.id || '');
+        const [queue, setQueue] = useState([]);
+        const [index, setIndex] = useState(0);
+        const [selected, setSelected] = useState(null);
+        const [answered, setAnswered] = useState(false);
+
+        useEffect(() => {
+          if (!sectionId || !sections.some((s) => s.id === sectionId)) {
+            setSectionId(sections[0]?.id || '');
+          }
+          setQueue([]);
+          setIndex(0);
+          setSelected(null);
+          setAnswered(false);
+        }, [resetSignal, sections.map((s) => s.id).join('|')]);
+
+        const pool = useMemo(() => {
+          return questions.filter(
+            (q) =>
+              q._answerable &&
+              q.masteryEligible !== false &&
+              q._sectionId === sectionId,
+          );
+        }, [questions, sectionId]);
+
+        function start() {
+          setQueue(shuffle(pool).map(buildPlayableQuestion));
+          setIndex(0);
+          setSelected(null);
+          setAnswered(false);
+        }
+
+        function changeSection(e) {
+          setSectionId(e.target.value);
+          setQueue([]);
+          setIndex(0);
+          setSelected(null);
+          setAnswered(false);
+        }
+
+        function choose(i) {
+          if (answered) return;
+          setSelected(i);
+          setAnswered(true);
+        }
+
+        function next() {
+          setSelected(null);
+          setAnswered(false);
+          setIndex((prev) => Math.min(prev + 1, queue.length));
+        }
+
+        const current = queue[index];
+
+        return (
+          <section className='panel'>
+            <h2>Master one subject</h2>
+            <div className='toolbar'>
+              <div className='field span-8'>
+                <label>Section</label>
+                <select value={sectionId} onChange={changeSection}>
+                  {sections.map((s) => {
+                    const c = questions.filter(
+                      (q) =>
+                        q._answerable &&
+                        q.masteryEligible !== false &&
+                        q._sectionId === s.id,
+                    ).length;
+                    return (
+                      <option key={s.id} value={s.id}>
+                        {s.name} ({c})
+                      </option>
+                    );
+                  })}
+                </select>
+              </div>
+              <div className='field span-4'>
+                <button onClick={start} disabled={pool.length === 0}>
+                  Start / reshuffle subject
+                </button>
+              </div>
+            </div>
+            <div className='stats'>
+              <span className='pill'>
+                Available in selected subject: {pool.length}
+              </span>
+              <span className='pill'>Current session: {queue.length}</span>
+              {queue.length > 0 && (
+                <span className='pill'>
+                  Progress: {Math.min(index + 1, queue.length)} / {queue.length}
+                </span>
+              )}
+            </div>
+
+            {!current ? (
+              <div className='empty'>
+                Choose a subject and start. Every wrong answer immediately shows
+                the correct answer.
+              </div>
+            ) : (
+              <article className='question-card'>
+                <div className='question-top'>
+                  <div>
+                    <QuestionMeta q={current} />
+                    <div className='question-text'>
+                      Q{index + 1}. {current.question}
+                    </div>
+                  </div>
+                  <BookmarkButton
+                    id={current.id}
+                    bookmarks={bookmarks}
+                    toggleBookmark={toggleBookmark}
+                  />
+                </div>
+                <div className='options'>
+                  {current._playOptions.map((opt, i) => {
+                    const isCorrect = i === current._playAnswerIndex;
+                    const isSelected = selected === i;
+                    let className = 'option';
+                    if (answered && isCorrect) className += ' correct';
+                    if (answered && isSelected && !isCorrect)
+                      className += ' wrong';
+                    if (answered) className += ' disabled';
+                    return (
+                      <label className={className} key={`${current.id}-${i}`}>
+                        <input
+                          type='radio'
+                          name={`mastery-${current.id}`}
+                          checked={selected === i}
+                          disabled={answered}
+                          onChange={() => choose(i)}
+                        />
+                        <span>{opt.text}</span>
+                      </label>
+                    );
+                  })}
+                </div>
+                {answered && selected === current._playAnswerIndex && (
+                  <div className='feedback good'>Correct.</div>
+                )}
+                {answered && selected !== current._playAnswerIndex && (
+                  <div className='feedback bad'>
+                    Wrong. Correct answer: {current._correctText}
+                  </div>
+                )}
+                <div className='actions'>
+                  {answered && index < queue.length - 1 && (
+                    <button onClick={next}>Next question</button>
+                  )}
+                  {answered && index >= queue.length - 1 && (
+                    <button onClick={start}>Restart subject shuffled</button>
+                  )}
+                </div>
+              </article>
+            )}
+          </section>
+        );
+      }
+
+      function BookmarkMode({ questions, bookmarks, toggleBookmark }) {
+        const bookmarkedQuestions = useMemo(() => {
+          const byId = new Map(questions.map((q) => [q.id, q]));
+          return bookmarks
+            .map((id) => byId.get(id))
+            .filter(Boolean)
+            .map(buildPlayableQuestion);
+        }, [questions, bookmarks]);
+
+        const [answers, setAnswers] = useState({});
+
+        useEffect(() => setAnswers({}), [bookmarks.join('|')]);
+
+        if (bookmarks.length === 0) {
+          return (
+            <section className='panel'>
+              <h2>Bookmarked questions</h2>
+              <div className='empty'>
+                No bookmarks yet. Use the star button in exam or mastery mode.
+              </div>
+            </section>
+          );
+        }
+
+        return (
+          <section className='panel'>
+            <h2>Bookmarked questions</h2>
+            <div className='stats'>
+              <span className='pill'>Saved IDs: {bookmarks.length}</span>
+              <span className='pill'>
+                Available after current filter/search:{' '}
+                {bookmarkedQuestions.length}
+              </span>
+            </div>
+            {bookmarkedQuestions.length === 0 ? (
+              <div className='empty'>
+                Your bookmarks exist, but the current filter/search hides them.
+                Disable the review filter or clear search.
+              </div>
+            ) : (
+              bookmarkedQuestions.map((q, idx) => (
+                <article className='question-card' key={q.id}>
+                  <div className='question-top'>
+                    <div>
+                      <QuestionMeta q={q} />
+                      <div className='question-text'>
+                        Q{idx + 1}. {q.question}
+                      </div>
+                    </div>
+                    <BookmarkButton
+                      id={q.id}
+                      bookmarks={bookmarks}
+                      toggleBookmark={toggleBookmark}
+                    />
+                  </div>
+                  <div className='options'>
+                    {q._playOptions.map((opt, i) => {
+                      const selected = answers[q.id];
+                      const answered = selected !== undefined;
+                      const isCorrect = i === q._playAnswerIndex;
+                      const isSelected = selected === i;
+                      let className = 'option';
+                      if (answered && isCorrect) className += ' correct';
+                      if (answered && isSelected && !isCorrect)
+                        className += ' wrong';
+                      if (answered) className += ' disabled';
+                      return (
+                        <label className={className} key={`${q.id}-${i}`}>
+                          <input
+                            type='radio'
+                            name={`bookmark-${q.id}`}
+                            checked={selected === i}
+                            disabled={answered}
+                            onChange={() =>
+                              setAnswers((prev) => ({ ...prev, [q.id]: i }))
+                            }
+                          />
+                          <span>{opt.text}</span>
+                        </label>
+                      );
+                    })}
+                  </div>
+                  {answers[q.id] !== undefined &&
+                    answers[q.id] === q._playAnswerIndex && (
+                      <div className='feedback good'>Correct.</div>
+                    )}
+                  {answers[q.id] !== undefined &&
+                    answers[q.id] !== q._playAnswerIndex && (
+                      <div className='feedback bad'>
+                        Wrong. Correct answer: {q._correctText}
+                      </div>
+                    )}
+                </article>
+              ))
+            )}
+          </section>
+        );
+      }
+
+      function App() {
+        const [loading, setLoading] = useState(true);
+        const [error, setError] = useState('');
+        const [rawQuestions, setRawQuestions] = useState([]);
+        const [dataPath, setDataPath] = useState('');
+        const [mode, setMode] = useState('exam');
+        const [excludeReview, setExcludeReview] = useState(true);
+        const [search, setSearch] = useState('');
+        const [bookmarks, setBookmarks] = useState(readBookmarks);
+        const [resetSignal, setResetSignal] = useState(0);
+
+        useEffect(() => {
+          loadQuestionBank()
+            .then((result) => {
+              setRawQuestions(result.questions);
+              setDataPath(result.path);
+              setLoading(false);
+            })
+            .catch((err) => {
+              setError(err.message);
+              setLoading(false);
+            });
+        }, []);
+
+        function forceResetGeneratedPools() {
+          setResetSignal((prev) => prev + 1);
+        }
+
+        const filteredQuestions = useMemo(() => {
+          const term = normalizeText(search).toLowerCase();
+          return rawQuestions.filter((q) => {
+            if (excludeReview && q._review) return false;
+            if (!term) return true;
+            const haystack = [q.question, q._section, ...(q.options || [])]
+              .map(normalizeText)
               .join(' ')
               .toLowerCase();
-            if (!haystack.includes(searchLower)) return false;
-          }
-          return true;
-        });
-      }
-
-      function prepareRenderedQuestion(q) {
-        const options = q.options.map((text, originalIndex) => ({
-          text,
-          originalIndex,
-        }));
-        const shuffledOptions = shuffle(options);
-        const correctShuffledIndex = shuffledOptions.findIndex(
-          (o) => o.originalIndex === q.answerIndex,
-        );
-        return {
-          q,
-          shuffledOptions,
-          correctShuffledIndex,
-          selectedIndex: null,
-          revealed: false,
-        };
-      }
-
-      function questionMetaHtml(q) {
-        const review = q.reviewNeeded
-          ? '<span class="pill warn">manual review</span>'
-          : '';
-        const confidence = q.answerConfidence
-          ? '<span class="pill">confidence: ' +
-            escapeHtml(q.answerConfidence) +
-            '</span>'
-          : '';
-        const source = q.source
-          ? '<span class="pill">' + escapeHtml(q.source) + '</span>'
-          : '';
-        return (
-          '<div class="meta"><span class="pill">' +
-          escapeHtml(q.section) +
-          '</span>' +
-          source +
-          confidence +
-          review +
-          '</div>'
-        );
-      }
-
-      function bookmarkButtonHtml(q) {
-        const on = isBookmarked(q.id);
-        return (
-          '<button type="button" class="bookmark ' +
-          (on ? 'on' : '') +
-          '" data-bookmark-id="' +
-          escapeHtml(q.id) +
-          '">' +
-          (on ? '★ Bookmarked' : '☆ Bookmark') +
-          '</button>'
-        );
-      }
-
-      function renderQuestionCard(item, index, total, context) {
-        const q = item.q;
-        const optionName = context + '-q-' + index;
-        const disabled = item.revealed ? 'disabled' : '';
-        const optionsHtml = item.shuffledOptions
-          .map((opt, optIndex) => {
-            let cls = 'option';
-            if (item.revealed && optIndex === item.correctShuffledIndex)
-              cls += ' correct';
-            if (
-              item.revealed &&
-              item.selectedIndex === optIndex &&
-              optIndex !== item.correctShuffledIndex
-            )
-              cls += ' wrong';
-            const checked = item.selectedIndex === optIndex ? 'checked' : '';
-            return (
-              '<label class="' +
-              cls +
-              '">' +
-              '<input type="radio" name="' +
-              optionName +
-              '" value="' +
-              optIndex +
-              '" ' +
-              checked +
-              ' ' +
-              disabled +
-              ' />' +
-              '<span>' +
-              escapeHtml(opt.text) +
-              '</span>' +
-              '</label>'
-            );
-          })
-          .join('');
-
-        let feedback = '';
-        if (item.revealed) {
-          const correct = item.selectedIndex === item.correctShuffledIndex;
-          const cls = correct ? 'good' : 'bad';
-          const msg = correct
-            ? 'Correct.'
-            : 'Wrong. Correct answer: <strong>' +
-              escapeHtml(
-                item.shuffledOptions[item.correctShuffledIndex]?.text ||
-                  q.answer,
-              ) +
-              '</strong>';
-          const explanation = q.explanation
-            ? '<div class="small" style="margin-top:6px;">' +
-              escapeHtml(q.explanation) +
-              '</div>'
-            : '';
-          feedback =
-            '<div class="feedback ' + cls + '">' + msg + explanation + '</div>';
-        }
-
-        return (
-          '<div class="question-card" data-question-index="' +
-          index +
-          '">' +
-          '<div class="question-head">' +
-          '<div><p class="question-title">Question ' +
-          (index + 1) +
-          ' of ' +
-          total +
-          '</p>' +
-          '<div>' +
-          escapeHtml(q.question) +
-          '</div>' +
-          questionMetaHtml(q) +
-          '</div>' +
-          bookmarkButtonHtml(q) +
-          '</div>' +
-          '<div class="options">' +
-          optionsHtml +
-          '</div>' +
-          feedback +
-          '</div>'
-        );
-      }
-
-      function openExamSetup() {
-        if (!app.bank) return;
-        const count = app.bank.examConfig?.defaultQuestionCount || 30;
-        $('examCount').value = Math.min(
-          count,
-          filteredQuestions({ mode: 'exam' }).length || count,
-        );
-        showOnly('examSetupView');
-      }
-
-      function startExam() {
-        const count = Math.max(1, Number($('examCount').value || 30));
-        const sectionId = $('examSectionSelect').value;
-        const quality = $('examQualitySelect').value;
-        const pool = filteredQuestions({ sectionId, quality, mode: 'exam' });
-
-        if (pool.length === 0) {
-          showStatus(
-            'No answered questions found for this exam filter.',
-            'bad',
-          );
-          return;
-        }
-
-        const selected = shuffle(pool).slice(0, Math.min(count, pool.length));
-        app.mode = 'exam';
-        app.rendered = selected.map(prepareRenderedQuestion);
-        renderExam();
-      }
-
-      function renderExam() {
-        hideStatus();
-        const total = app.rendered.length;
-        const html =
-          '<div class="panel">' +
-          '<div class="topbar"><div><h2>Real exam simulation</h2><p class="small">Answer all questions, then submit. Correct answers are hidden until submission.</p></div>' +
-          '<button class="secondary" id="cancelExamBtn">Back</button></div>' +
-          app.rendered
-            .map((item, index) =>
-              renderQuestionCard(item, index, total, 'exam'),
-            )
-            .join('') +
-          '<div class="sticky-actions"><div class="row"><button id="submitExamBtn">Submit exam</button>' +
-          '<button class="secondary" id="resetExamBtn">Restart with new shuffle</button></div></div>' +
-          '</div>';
-
-        $('quizView').innerHTML = html;
-        showOnly('quizView');
-        attachExamEvents();
-        attachBookmarkEvents();
-      }
-
-      function attachExamEvents() {
-        app.rendered.forEach((item, index) => {
-          document
-            .querySelectorAll('input[name="exam-q-' + index + '"]')
-            .forEach((input) => {
-              input.onchange = () => {
-                item.selectedIndex = Number(input.value);
-              };
-            });
-        });
-        $('submitExamBtn').onclick = submitExam;
-        $('resetExamBtn').onclick = startExam;
-        $('cancelExamBtn').onclick = openExamSetup;
-      }
-
-      function submitExam() {
-        const cfg = app.bank?.examConfig || {};
-        const scoreCorrect = Number(cfg.scoreCorrect ?? 1);
-        const scoreWrong = Number(cfg.scoreWrong ?? -0.33);
-        const scoreUnanswered = Number(cfg.scoreUnanswered ?? 0);
-
-        let correct = 0,
-          wrong = 0,
-          unanswered = 0,
-          score = 0;
-        app.rendered.forEach((item) => {
-          item.revealed = true;
-          if (item.selectedIndex === null) {
-            unanswered += 1;
-            score += scoreUnanswered;
-          } else if (item.selectedIndex === item.correctShuffledIndex) {
-            correct += 1;
-            score += scoreCorrect;
-          } else {
-            wrong += 1;
-            score += scoreWrong;
-          }
-        });
-
-        const total = app.rendered.length;
-        const percent = total ? ((correct / total) * 100).toFixed(1) : '0.0';
-
-        const summary =
-          '<div class="panel">' +
-          '<h2>Exam result</h2>' +
-          '<div class="score-box">' +
-          '<div class="score-item"><strong>' +
-          score.toFixed(2) +
-          '</strong><span>Final score</span></div>' +
-          '<div class="score-item"><strong>' +
-          correct +
-          '</strong><span>Correct</span></div>' +
-          '<div class="score-item"><strong>' +
-          wrong +
-          '</strong><span>Wrong</span></div>' +
-          '<div class="score-item"><strong>' +
-          percent +
-          '%</strong><span>Accuracy</span></div>' +
-          '</div>' +
-          '<p class="small">Unanswered: ' +
-          unanswered +
-          '. Review the questions below.</p>' +
-          '<div class="row"><button class="secondary" id="backToHomeFromResult">Home</button><button class="secondary" id="newExamFromResult">New exam</button></div>' +
-          '</div>';
-
-        $('resultView').innerHTML =
-          summary +
-          '<div class="panel"><h2>Review</h2>' +
-          app.rendered
-            .map((item, index) =>
-              renderQuestionCard(item, index, total, 'exam-review'),
-            )
-            .join('') +
-          '</div>';
-        showOnly('resultView');
-        $('backToHomeFromResult').onclick = () => showOnly('homeView');
-        $('newExamFromResult').onclick = openExamSetup;
-        attachBookmarkEvents();
-      }
-
-      function openMasterySetup() {
-        if (!app.bank) return;
-        showOnly('masterySetupView');
-      }
-
-      function startMastery() {
-        const sectionId = $('masterySectionSelect').value;
-        const quality = $('masteryQualitySelect').value;
-        const search = $('masterySearch').value || '';
-        const pool = filteredQuestions({
-          sectionId,
-          quality,
-          mode: 'mastery',
-          search,
-        });
-
-        if (pool.length === 0) {
-          showStatus(
-            'No answered questions found for this mastery filter.',
-            'bad',
-          );
-          return;
-        }
-
-        app.mode = 'mastery';
-        app.masteryIndex = 0;
-        app.masteryStats = { correct: 0, wrong: 0, answered: 0 };
-        app.rendered = shuffle(pool).map(prepareRenderedQuestion);
-        renderMasteryQuestion();
-      }
-
-      function renderMasteryQuestion() {
-        hideStatus();
-        const total = app.rendered.length;
-        const index = app.masteryIndex;
-        const item = app.rendered[index];
-
-        if (!item) {
-          renderMasteryDone();
-          return;
-        }
-
-        const accuracy = app.masteryStats.answered
-          ? (
-              (app.masteryStats.correct / app.masteryStats.answered) *
-              100
-            ).toFixed(1)
-          : '0.0';
-
-        $('quizView').innerHTML =
-          '<div class="panel">' +
-          '<div class="topbar"><div><h2>Mastery practice</h2>' +
-          '<p class="small">Correct: ' +
-          app.masteryStats.correct +
-          ' · Wrong: ' +
-          app.masteryStats.wrong +
-          ' · Accuracy: ' +
-          accuracy +
-          '%</p></div>' +
-          '<button class="secondary" id="quitMasteryBtn">Back</button></div>' +
-          renderQuestionCard(item, index, total, 'mastery') +
-          '<div class="row"><button id="nextMasteryBtn" class="hidden">Next question</button></div>' +
-          '</div>';
-
-        showOnly('quizView');
-        attachBookmarkEvents();
-        $('quitMasteryBtn').onclick = openMasterySetup;
-        $('nextMasteryBtn').onclick = () => {
-          app.masteryIndex += 1;
-          renderMasteryQuestion();
-        };
-
-        document
-          .querySelectorAll('input[name="mastery-q-' + index + '"]')
-          .forEach((input) => {
-            input.onchange = () => answerMastery(Number(input.value));
+            return haystack.includes(term);
           });
-      }
+        }, [rawQuestions, excludeReview, search]);
 
-      function answerMastery(selectedIndex) {
-        const item = app.rendered[app.masteryIndex];
-        if (!item || item.revealed) return;
-        item.selectedIndex = selectedIndex;
-        item.revealed = true;
-        app.masteryStats.answered += 1;
-        if (selectedIndex === item.correctShuffledIndex)
-          app.masteryStats.correct += 1;
-        else app.masteryStats.wrong += 1;
+        const answerableFiltered = useMemo(
+          () => filteredQuestions.filter(isAnswerable),
+          [filteredQuestions],
+        );
+        const sections = useMemo(
+          () => buildSections(answerableFiltered),
+          [answerableFiltered],
+        );
+        const reviewCount = useMemo(
+          () => rawQuestions.filter((q) => q._review).length,
+          [rawQuestions],
+        );
 
-        renderMasteryQuestion();
-        $('nextMasteryBtn').classList.remove('hidden');
-      }
+        function toggleBookmark(id) {
+          setBookmarks((prev) => {
+            const next = prev.includes(id)
+              ? prev.filter((x) => x !== id)
+              : [...prev, id];
+            saveBookmarks(next);
+            return next;
+          });
+        }
 
-      function renderMasteryDone() {
-        const total = app.rendered.length;
-        const accuracy = total
-          ? ((app.masteryStats.correct / total) * 100).toFixed(1)
-          : '0.0';
-        $('resultView').innerHTML =
-          '<div class="panel">' +
-          '<h2>Practice complete</h2>' +
-          '<div class="score-box">' +
-          '<div class="score-item"><strong>' +
-          total +
-          '</strong><span>Total</span></div>' +
-          '<div class="score-item"><strong>' +
-          app.masteryStats.correct +
-          '</strong><span>Correct</span></div>' +
-          '<div class="score-item"><strong>' +
-          app.masteryStats.wrong +
-          '</strong><span>Wrong</span></div>' +
-          '<div class="score-item"><strong>' +
-          accuracy +
-          '%</strong><span>Accuracy</span></div>' +
-          '</div>' +
-          '<div class="row"><button id="masteryAgainBtn">Practice again</button><button class="secondary" id="masteryHomeBtn">Home</button></div>' +
-          '</div>';
-        showOnly('resultView');
-        $('masteryAgainBtn').onclick = startMastery;
-        $('masteryHomeBtn').onclick = () => showOnly('homeView');
-      }
+        if (loading)
+          return <div className='loading'>Loading question bank...</div>;
+        if (error)
+          return (
+            <div className='error'>
+              <strong>Could not load questions.</strong>
+              <br />
+              {error}
+              <br />
+              <br />
+              Make sure the file exists at <code>data/questions.json</code>.
+            </div>
+          );
 
-      function openBookmarks() {
-        updateBookmarkInfo();
-        $('bookmarkList').classList.add('hidden');
-        $('bookmarkList').innerHTML = '';
-        showOnly('bookmarkSetupView');
-      }
-
-      function bookmarkedQuestions() {
-        return app.questions.filter(
-          (q) => app.bookmarks.has(q.id) && answered(q),
+        return (
+          <>
+            <ModeSelector
+              mode={mode}
+              setMode={setMode}
+              bookmarkCount={bookmarks.length}
+            />
+            <FilterPanel
+              excludeReview={excludeReview}
+              setExcludeReview={setExcludeReview}
+              search={search}
+              setSearch={setSearch}
+              filteredCount={filteredQuestions.length}
+              totalCount={rawQuestions.length}
+              answerableCount={answerableFiltered.length}
+              reviewCount={reviewCount}
+              dataPath={dataPath}
+              onFilterChangeSideEffect={forceResetGeneratedPools}
+            />
+            {mode === 'exam' && (
+              <ExamMode
+                questions={answerableFiltered}
+                sections={sections}
+                bookmarks={bookmarks}
+                toggleBookmark={toggleBookmark}
+                resetSignal={resetSignal}
+              />
+            )}
+            {mode === 'mastery' && (
+              <MasteryMode
+                questions={answerableFiltered}
+                sections={sections}
+                bookmarks={bookmarks}
+                toggleBookmark={toggleBookmark}
+                resetSignal={resetSignal}
+              />
+            )}
+            {mode === 'bookmarks' && (
+              <BookmarkMode
+                questions={answerableFiltered}
+                bookmarks={bookmarks}
+                toggleBookmark={toggleBookmark}
+              />
+            )}
+          </>
         );
       }
 
-      function startBookmarksPractice() {
-        const pool = bookmarkedQuestions();
-        if (pool.length === 0) {
-          showStatus('No answered bookmarked questions are available.', 'warn');
-          return;
-        }
-        app.mode = 'bookmarks';
-        app.masteryIndex = 0;
-        app.masteryStats = { correct: 0, wrong: 0, answered: 0 };
-        app.rendered = shuffle(pool).map(prepareRenderedQuestion);
-        renderMasteryQuestion();
-      }
-
-      function showBookmarkList() {
-        const list = bookmarkedQuestions();
-        const el = $('bookmarkList');
-        if (list.length === 0) {
-          el.innerHTML =
-            '<div class="status warn">No bookmarked questions.</div>';
-        } else {
-          el.innerHTML = list
-            .map(
-              (q, i) =>
-                '<div class="question-card">' +
-                '<div class="question-head"><div><p class="question-title">' +
-                (i + 1) +
-                '. ' +
-                escapeHtml(q.question) +
-                '</p>' +
-                questionMetaHtml(q) +
-                '</div>' +
-                bookmarkButtonHtml(q) +
-                '</div>' +
-                '<p class="small"><strong>Correct answer:</strong> ' +
-                escapeHtml(q.answer) +
-                '</p>' +
-                '</div>',
-            )
-            .join('');
-        }
-        el.classList.toggle('hidden');
-        attachBookmarkEvents();
-      }
-
-      function clearBookmarks() {
-        if (!confirm('Clear all bookmarked questions from this browser?'))
-          return;
-        app.bookmarks.clear();
-        saveBookmarks();
-        $('bookmarkList').innerHTML = '';
-        $('bookmarkList').classList.add('hidden');
-      }
-
-      $('homeBtn').onclick = () => showOnly('homeView');
-      $('reloadBtn').onclick = loadQuestionBank;
-      $('openExamBtn').onclick = openExamSetup;
-      $('openMasteryBtn').onclick = openMasterySetup;
-      $('openBookmarksBtn').onclick = openBookmarks;
-      $('startExamBtn').onclick = startExam;
-      $('startMasteryBtn').onclick = startMastery;
-      $('startBookmarksBtn').onclick = startBookmarksPractice;
-      $('showBookmarkListBtn').onclick = showBookmarkList;
-      $('clearBookmarksBtn').onclick = clearBookmarks;
-
-      $('jsonFileInput').onchange = async (event) => {
-        const file = event.target.files?.[0];
-        if (!file) return;
-        try {
-          const text = await file.text();
-          const data = JSON.parse(text);
-          validateBank(data);
-          hideStatus();
-          showOnly('homeView');
-        } catch (err) {
-          showStatus(
-            'Could not read selected JSON: ' + escapeHtml(err.message),
-            'bad',
-          );
-        }
-      };
-
-      loadQuestionBank();
+      ReactDOM.createRoot(document.getElementById('root')).render(<App />);
     </script>
   </body>
 </html>

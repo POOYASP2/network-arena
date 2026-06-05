@@ -422,9 +422,65 @@
         background: var(--danger-bg);
       }
 
+      .topic-grid {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 10px;
+        margin-top: 8px;
+      }
+
+      .topic-option {
+        display: flex;
+        align-items: flex-start;
+        gap: 9px;
+        border: 1px solid var(--line);
+        border-radius: 12px;
+        padding: 10px 11px;
+        background: #fafafa;
+        cursor: pointer;
+        min-height: 58px;
+      }
+
+      .topic-option:hover {
+        border-color: var(--primary);
+        background: #f8fafc;
+      }
+
+      .topic-option input {
+        margin-top: 2px;
+        flex: 0 0 auto;
+      }
+
+      .topic-name {
+        display: block;
+        font-weight: 800;
+        line-height: 1.25;
+      }
+
+      .topic-count {
+        display: block;
+        color: var(--muted);
+        font-size: 12px;
+        font-weight: 700;
+        margin-top: 3px;
+      }
+
+      .topic-actions {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+        margin-top: 10px;
+      }
+
+      .topic-actions button {
+        padding: 8px 10px;
+        font-size: 13px;
+      }
+
       @media (max-width: 850px) {
         .nav-grid,
-        .score-box {
+        .score-box,
+        .topic-grid {
           grid-template-columns: 1fr;
         }
         .toolbar {
@@ -821,26 +877,54 @@
         toggleBookmark,
         resetSignal,
       }) {
-        const [sectionId, setSectionId] = useState('all');
+        const [selectedSectionIds, setSelectedSectionIds] = useState([]);
         const [count, setCount] = useState(30);
         const [examQuestions, setExamQuestions] = useState([]);
         const [answers, setAnswers] = useState({});
         const [submitted, setSubmitted] = useState(false);
 
-        useEffect(() => {
+        const sectionSignature = useMemo(
+          () => sections.map((s) => s.id).join('|'),
+          [sections],
+        );
+
+        function clearGeneratedExam() {
           setExamQuestions([]);
           setAnswers({});
           setSubmitted(false);
-        }, [resetSignal]);
+        }
+
+        useEffect(() => {
+          setSelectedSectionIds(sections.map((s) => s.id));
+          clearGeneratedExam();
+        }, [resetSignal, sectionSignature]);
+
+        const sectionCounts = useMemo(() => {
+          const counts = new Map();
+          questions.forEach((q) => {
+            if (!q._answerable || q.examEligible === false) return;
+            counts.set(q._sectionId, (counts.get(q._sectionId) || 0) + 1);
+          });
+          return counts;
+        }, [questions]);
+
+        const allSectionIds = useMemo(
+          () => sections.map((s) => s.id),
+          [sections],
+        );
+        const allSelected =
+          allSectionIds.length > 0 &&
+          allSectionIds.every((id) => selectedSectionIds.includes(id));
 
         const pool = useMemo(() => {
+          const selected = new Set(selectedSectionIds);
           return questions.filter(
             (q) =>
               q._answerable &&
               q.examEligible !== false &&
-              (sectionId === 'all' || q._sectionId === sectionId),
+              selected.has(q._sectionId),
           );
-        }, [questions, sectionId]);
+        }, [questions, selectedSectionIds]);
 
         function generateExam() {
           const selected = shuffle(pool)
@@ -851,11 +935,24 @@
           setSubmitted(false);
         }
 
-        function changeSection(e) {
-          setSectionId(e.target.value);
-          setExamQuestions([]);
-          setAnswers({});
-          setSubmitted(false);
+        function toggleSection(sectionId) {
+          setSelectedSectionIds((prev) => {
+            const next = prev.includes(sectionId)
+              ? prev.filter((id) => id !== sectionId)
+              : [...prev, sectionId];
+            return next;
+          });
+          clearGeneratedExam();
+        }
+
+        function selectAllSections() {
+          setSelectedSectionIds(allSectionIds);
+          clearGeneratedExam();
+        }
+
+        function clearSections() {
+          setSelectedSectionIds([]);
+          clearGeneratedExam();
         }
 
         function selectAnswer(id, idx) {
@@ -879,33 +976,52 @@
           <section className='panel'>
             <h2>Simulate real exam</h2>
             <div className='toolbar'>
-              <div className='field span-6'>
-                <label>Section</label>
-                <select value={sectionId} onChange={changeSection}>
-                  <option value='all'>
-                    All filtered answerable questions (
-                    {
-                      questions.filter(
-                        (q) => q._answerable && q.examEligible !== false,
-                      ).length
-                    }
-                    )
-                  </option>
-                  {sections.map((s) => (
-                    <option key={s.id} value={s.id}>
-                      {s.name} (
-                      {
-                        questions.filter(
-                          (q) =>
-                            q._answerable &&
-                            q.examEligible !== false &&
-                            q._sectionId === s.id,
-                        ).length
-                      }
-                      )
-                    </option>
-                  ))}
-                </select>
+              <div className='field span-8'>
+                <label>Topics / sections</label>
+                <div className='topic-grid'>
+                  {sections.map((s) => {
+                    const countForSection = sectionCounts.get(s.id) || 0;
+                    return (
+                      <label className='topic-option' key={s.id}>
+                        <input
+                          type='checkbox'
+                          checked={selectedSectionIds.includes(s.id)}
+                          onChange={() => toggleSection(s.id)}
+                          disabled={countForSection === 0}
+                        />
+                        <span>
+                          <span className='topic-name'>{s.name}</span>
+                          <span className='topic-count'>
+                            {countForSection} available questions
+                          </span>
+                        </span>
+                      </label>
+                    );
+                  })}
+                </div>
+                <div className='topic-actions'>
+                  <button
+                    type='button'
+                    className='ghost'
+                    onClick={selectAllSections}
+                    disabled={allSelected}
+                  >
+                    Select all topics
+                  </button>
+                  <button
+                    type='button'
+                    className='ghost'
+                    onClick={clearSections}
+                    disabled={selectedSectionIds.length === 0}
+                  >
+                    Clear topics
+                  </button>
+                </div>
+                <p className='small-note'>
+                  For Part 1, choose one or more topics. The exam will be
+                  generated only from the selected topics plus the global
+                  search/review filters above.
+                </p>
               </div>
               <div className='field span-2'>
                 <label>Questions</label>
@@ -917,13 +1033,16 @@
                   onChange={(e) => setCount(e.target.value)}
                 />
               </div>
-              <div className='field span-4'>
+              <div className='field span-2'>
                 <button onClick={generateExam} disabled={pool.length === 0}>
-                  Generate exam from current pool
+                  Generate exam
                 </button>
               </div>
             </div>
             <div className='stats'>
+              <span className='pill'>
+                Selected topics: {selectedSectionIds.length} / {sections.length}
+              </span>
               <span className='pill'>
                 Available for this exam: {pool.length}
               </span>
@@ -933,8 +1052,8 @@
 
             {examQuestions.length === 0 ? (
               <div className='empty'>
-                Generate an exam. If the pool is empty, change the filter or
-                choose another section.
+                Choose one or more topics, then generate an exam. If the pool is
+                empty, change the selected topics or the global filters above.
               </div>
             ) : (
               <>

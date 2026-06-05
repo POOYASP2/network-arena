@@ -9697,11 +9697,6 @@
       "virtualization": "07-virtualization",
       "containers-kubernetes": "08-containers-kubernetes",
       "sdn-nfv": "09-network-softwarization"
-    },
-    "removed": {
-      "topicFilteredQuestions": 31,
-      "duplicateQuestions": 7,
-      "totalRemoved": 38
     }
   }
 }

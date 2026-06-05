@@ -475,11 +475,11 @@
       "options": [
         "130.192.1.0/23",
         "0.0.0.0/0",
-        "130.192.1.0/23",
+        "130.192.1.0/22",
         "130.192.0.0/23"
       ],
-      "answerIndex": 1,
-      "answer": "0.0.0.0/0",
+      "answerIndex": 2,
+      "answer": "130.192.1.0/22",
       "explanation": "Answered from the networking/cloud concept tested by the question. Verify against the lecturer's official key if one becomes available.",
       "status": "answered",
       "examEligible": true,

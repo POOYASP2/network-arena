@@ -926,10 +926,68 @@
           );
         }, [questions, selectedSectionIds]);
 
+        function buildBalancedExamSelection() {
+          const target = Math.min(Number(count) || 1, pool.length);
+          const groups = new Map();
+          pool.forEach((q) => {
+            if (!groups.has(q._sectionId)) groups.set(q._sectionId, []);
+            groups.get(q._sectionId).push(q);
+          });
+
+          const sectionOrder = shuffle(
+            selectedSectionIds.filter(
+              (id) => (groups.get(id) || []).length > 0,
+            ),
+          );
+          const quotas = new Map(sectionOrder.map((id) => [id, 0]));
+          sectionOrder.forEach((id) => {
+            groups.set(id, shuffle(groups.get(id) || []));
+          });
+
+          let remaining = target;
+          let availableSectionIds = sectionOrder;
+
+          while (remaining > 0 && availableSectionIds.length > 0) {
+            const perSection = Math.floor(
+              remaining / availableSectionIds.length,
+            );
+            let extra = remaining % availableSectionIds.length;
+            let usedThisRound = 0;
+
+            availableSectionIds = shuffle(availableSectionIds).filter((id) => {
+              const alreadyTaken = quotas.get(id) || 0;
+              const availableLeft =
+                (groups.get(id) || []).length - alreadyTaken;
+              let desired = perSection;
+              if (extra > 0) {
+                desired += 1;
+                extra -= 1;
+              }
+              if (desired <= 0 || availableLeft <= 0) {
+                return availableLeft > 0;
+              }
+              const take = Math.min(desired, availableLeft, remaining);
+              quotas.set(id, alreadyTaken + take);
+              remaining -= take;
+              usedThisRound += take;
+              return availableLeft - take > 0;
+            });
+
+            if (usedThisRound === 0) break;
+          }
+
+          const selected = [];
+          sectionOrder.forEach((id) => {
+            const quota = quotas.get(id) || 0;
+            selected.push(...(groups.get(id) || []).slice(0, quota));
+          });
+          return shuffle(selected);
+        }
+
         function generateExam() {
-          const selected = shuffle(pool)
-            .slice(0, Math.min(Number(count) || 1, pool.length))
-            .map(buildPlayableQuestion);
+          const selected = buildBalancedExamSelection().map(
+            buildPlayableQuestion,
+          );
           setExamQuestions(selected);
           setAnswers({});
           setSubmitted(false);
@@ -971,6 +1029,17 @@
           });
           return { correct, wrong, unanswered, total: correct - wrong * 0.33 };
         }, [answers, examQuestions]);
+
+        const generatedDistribution = useMemo(() => {
+          const counts = new Map();
+          examQuestions.forEach((q) => {
+            counts.set(q._sectionId, (counts.get(q._sectionId) || 0) + 1);
+          });
+          return sections
+            .filter((s) => counts.has(s.id))
+            .map((s) => `${s.name}: ${counts.get(s.id)}`)
+            .join(' • ');
+        }, [examQuestions, sections]);
 
         return (
           <section className='panel'>
@@ -1019,8 +1088,9 @@
                 </div>
                 <p className='small-note'>
                   For Part 1, choose one or more topics. The exam will be
-                  generated only from the selected topics plus the global
-                  search/review filters above.
+                  balanced as evenly as possible across the selected topics. If
+                  one topic does not have enough questions, the rest will be
+                  filled from the other selected topics.
                 </p>
               </div>
               <div className='field span-2'>
@@ -1049,6 +1119,11 @@
               <span className='pill'>Generated: {examQuestions.length}</span>
               <span className='pill warn'>Score: +1 / -0.33 / 0</span>
             </div>
+            {generatedDistribution && (
+              <p className='small-note'>
+                Generated distribution: {generatedDistribution}
+              </p>
+            )}
 
             {examQuestions.length === 0 ? (
               <div className='empty'>

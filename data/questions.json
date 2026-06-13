@@ -253,68 +253,12 @@
       "answerIndex": 0
     },
     {
-      "id": "addressing-tunneling-003",
-      "sectionId": "03-ipv6",
-      "section": "IPv6",
-      "source": "exam.html",
-      "question": "A device with NAT64 functionality can:",
-      "options": [
-        "Translate between IPv6 and IPv4 headers/addresses.",
-        "Operate on 64-bit IP addresses only.",
-        "Convert IPv6 packets directly into Ethernet frames.",
-        "Replace only the IPv6 destination address."
-      ],
-      "answerIndex": 0
-    },
-    {
       "id": "pdf-ipv4-ipv6-transition-001",
       "sectionId": "03-ipv6",
       "section": "IPv6",
       "source": "pastexams.pdf",
       "question": "Which of these techniques is not a solution for IPV4-IPV6 transition? (135s)",
       "options": ["6to4", "Teredo", "6over4", "6mix4"],
-      "answerIndex": 3
-    },
-    {
-      "id": "pdf-ipv4-ipv6-transition-002",
-      "sectionId": "03-ipv6",
-      "section": "IPv6",
-      "source": "pastexams.pdf",
-      "question": "In the DS-Lite solution for the IPV4-IPV6 transition (1958)",
-      "options": [
-        "the NAT functionality is not provided",
-        "The NAT functionality is implemented on the user's CPE",
-        "The NAT functionality is implemented both on the CPE and on the ISP devices",
-        "The NAT functionality is implemented for all users on appropriate ISP devices"
-      ],
-      "answerIndex": 3
-    },
-    {
-      "id": "pdf-ipv4-ipv6-transition-003",
-      "sectionId": "03-ipv6",
-      "section": "IPv6",
-      "source": "pastexams.pdf",
-      "question": "The Mapping Address and Port (MAP) technique for the IPv4-IPv6 transition is based on (34)",
-      "options": [
-        "The utilization, on the Customer Premises Equipment (CPE), of an IPv6 address derived from the IPv4 address and the Port Set ID assigned by the provider to the customer",
-        "The utilization, on the Border Relay, of an IPv6 address derived from the IPv4 address and the Port Set ID assigned by the provider to the various customers",
-        "The utilization, on the Customer Premises Equipment (CPE), of an IPv6 address selected among a fixed set of addresses defined by a standard",
-        "The utilization, on the Customer Premises Equipment (CPE), of an IPv6 address which varies on the basis of the IPv4 destination address that the user would like to reach"
-      ],
-      "answerIndex": 0
-    },
-    {
-      "id": "pdf-ipv4-ipv6-transition-004",
-      "sectionId": "03-ipv6",
-      "section": "IPv6",
-      "source": "pastexams.pdf",
-      "question": "The IPv4-IPv6 transition technique called DS-lite provides that: (281)",
-      "options": [
-        "It is not possible to connect IPv6 stations to the network",
-        "The NAT is positioned on the Customer Premises Equipment (CPE) of the user",
-        "Private IPv4 addresses are never used on user devices",
-        "NAT is placed on the Address Family Translation Router (AFTR)"
-      ],
       "answerIndex": 3
     },
     {
@@ -328,20 +272,6 @@
         "A VLAN tag is missing.",
         "A MAC address is unknown at L2.",
         "A switch port is down only."
-      ],
-      "answerIndex": 0
-    },
-    {
-      "id": "icmpv6-flow-label-002",
-      "sectionId": "03-ipv6",
-      "section": "IPv6",
-      "source": "exam.html",
-      "question": "The IPv6 Flow Label is intended to:",
-      "options": [
-        "Identify packets belonging to the same flow.",
-        "Replace TCP/UDP ports.",
-        "Encrypt traffic.",
-        "Detect routing loops."
       ],
       "answerIndex": 0
     },
@@ -428,21 +358,6 @@
         "Is assigned by the network administrator according to a hierarchical schema"
       ],
       "answerIndex": 1
-    },
-    {
-      "id": "pdf-device-configuration-002",
-      "sectionId": "03-ipv6",
-      "section": "IPv6",
-      "source": "pastexams.pdf",
-      "question": "What is the function of the \"scope\" associated with IPv6 addresses? (1871)",
-      "options": [
-        "It is used to resolve, in particular cases, the ambiguity regarding the sender.",
-        "There is no scope associated with IPv6 addresses.",
-        "It is used to be able to use global addresses.",
-        "It is used to be able to use anycast addresses."
-      ],
-      "answerIndex": 0,
-      "reviewNeeded": true
     },
     {
       "id": "pdf-device-configuration-003",

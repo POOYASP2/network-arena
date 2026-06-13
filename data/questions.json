@@ -1681,79 +1681,6 @@
       "answerIndex": 1
     },
     {
-      "id": "pdf-routing-044",
-      "sectionId": "02-routing",
-      "section": "Routing",
-      "source": "pastexams.pdf",
-      "question": "In OSPF, a \"Database Description\" packet: (2172)",
-      "options": [
-        "It is used by two adjacent routers to exchange their copies of the OSPF database",
-        "It is used by two adjacent routers to exchange their copies of the routing table",
-        "It allows a router that has detected a new adjacency with another OSPF router to know the LSAs it is missing",
-        "It allows a router that has just been powered on to know the LSAs it is missing"
-      ],
-      "answerIndex": 2,
-      "reviewNeeded": true
-    },
-    {
-      "id": "pdf-routing-045",
-      "sectionId": "02-routing",
-      "section": "Routing",
-      "source": "pastexams.pdf",
-      "question": "An OSPF Area Border Router (1937)",
-      "options": [
-        "It has summary information about the areas it faces and spreads it in the areas; it does not know the details of those areas.",
-        "It knows the details of the backbone area",
-        "It generates type 5 LSAs to describe destinations outside the routing domain.",
-        "It forwards, through the flooding mechanism, all the LSAs it receives from an area to all the other areas it faces"
-      ],
-      "answerIndex": 0,
-      "reviewNeeded": true
-    },
-    {
-      "id": "pdf-routing-046",
-      "sectionId": "02-routing",
-      "section": "Routing",
-      "source": "pastexams.pdf",
-      "question": "An OSPF \"Internal Router\" in an area keeps in its LSA archive: (1934)",
-      "options": [
-        "The detailed description of the topology of the entire OSPF domain",
-        "Only and exclusively a detailed description of the topology of the area of which the router is a part",
-        "The detailed description of the topology of the area of which the router is a part and the summaries of all the destinations present in the OSPF routing domain",
-        "The detailed description of the topology of the area of which the router is a part, the detailed description of the backbone area, and the summary of the remaining destinations present in the OSPF routing domain"
-      ],
-      "answerIndex": 2
-    },
-    {
-      "id": "pdf-routing-047",
-      "sectionId": "02-routing",
-      "section": "Routing",
-      "source": "pastexams.pdf",
-      "question": "In the OSPF protocol, the Network Link LSAs present in the Link State Database of a router contain: (2171)",
-      "options": [
-        "The adjacencies of each router with the IP networks configured on its interfaces",
-        "The IP networks present in the domain OSPF but in areas different from the area in which the router is located",
-        "Adjacencies with transit networks present in the OSPF domain",
-        "Adjacencies with transit networks present in the area under examination"
-      ],
-      "answerIndex": 3,
-      "reviewNeeded": true
-    },
-    {
-      "id": "pdf-routing-048",
-      "sectionId": "02-routing",
-      "section": "Routing",
-      "source": "pastexams.pdf",
-      "question": "In the OSPF protocol, routers connected to the same LAN are represented in the graph that describes the network as: (1935)",
-      "options": [
-        "A single node",
-        "A star-shaped structure of logical connections",
-        "A completely meshed structure of logical connections",
-        "A structure composed of a set of nodes on a broadcast link"
-      ],
-      "answerIndex": 1
-    },
-    {
       "id": "pdf-routing-049",
       "sectionId": "02-routing",
       "section": "Routing",
@@ -1766,34 +1693,6 @@
         "OSPF is proprietary"
       ],
       "answerIndex": 0
-    },
-    {
-      "id": "pdf-routing-050",
-      "sectionId": "02-routing",
-      "section": "Routing",
-      "source": "pastexams.pdf",
-      "question": "In OSPF, a \"Link State Update\" packet: (2174)",
-      "options": [
-        "It is also used in the Exchange procedure for exchanging all the LSAs owned by the routers, and transports each LSA in complete form",
-        "It transports the main information relating to a Link State Advertisement",
-        "It is used to update the adjacency status with a neighbor router and only carries the information related to that change D It is sent in network conditions to real ananda the translator 'and armed saurito"
-      ],
-      "answerIndex": 0,
-      "reviewNeeded": true
-    },
-    {
-      "id": "pdf-routing-051",
-      "sectionId": "02-routing",
-      "section": "Routing",
-      "source": "pastexams.pdf",
-      "question": "In OSPF, a \"Database Description\" packet: (2173)",
-      "options": [
-        "It is used during the \"Neighbor Discovery\" phase",
-        "It is used during the adjacency realignment phase",
-        "It is always sent encrypted to avoid security issues",
-        "It is always sent encrypted for privacy issues"
-      ],
-      "answerIndex": 1
     },
     {
       "id": "pdf-routing-052",

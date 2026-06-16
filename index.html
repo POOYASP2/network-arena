@@ -529,24 +529,20 @@
       crossorigin
       src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"
     ></script>
-    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
 
-    <script type="text/babel">
+    <script>
       const { useEffect, useMemo, useState } = React;
-
       const BOOKMARK_KEY = 'ncs_bookmarked_question_ids_v1';
       const DATA_PATHS = [
         './data/questions.json',
         './questions.json',
         './questions_unified_answered_deduplicated.json',
       ];
-
       function normalizeText(value) {
-        return String(value ?? '')
+        return String(value !== null && value !== void 0 ? value : '')
           .replace(/\s+/g, ' ')
           .trim();
       }
-
       function slugify(value) {
         return (
           normalizeText(value)
@@ -555,17 +551,14 @@
             .replace(/(^-|-$)/g, '') || 'unknown'
         );
       }
-
       function getSectionName(q) {
         return normalizeText(q.section || q.subject || 'Unknown / OCR review');
       }
-
       function getSectionId(q) {
         return normalizeText(
           q.sectionId || q.subjectId || slugify(getSectionName(q)),
         );
       }
-
       function isReviewQuestion(q) {
         const section = getSectionName(q).toLowerCase();
         return Boolean(
@@ -577,7 +570,6 @@
           String(q.answerConfidence || '').toLowerCase() === 'low',
         );
       }
-
       function isAnswerable(q) {
         return (
           Array.isArray(q.options) &&
@@ -587,14 +579,12 @@
           q.answerIndex < q.options.length
         );
       }
-
       function getCorrectText(q) {
         return normalizeText(
           q.answer ||
             (Array.isArray(q.options) ? q.options[q.answerIndex] : ''),
         );
       }
-
       function prepareQuestion(q) {
         return {
           ...q,
@@ -605,7 +595,6 @@
           _correctText: getCorrectText(q),
         };
       }
-
       function shuffle(array) {
         const arr = [...array];
         for (let i = arr.length - 1; i > 0; i--) {
@@ -614,7 +603,6 @@
         }
         return arr;
       }
-
       function buildPlayableQuestion(q) {
         const correctText = getCorrectText(q);
         const options = shuffle(
@@ -631,8 +619,12 @@
           _correctText: correctText,
         };
       }
-
       async function loadQuestionBank() {
+        if (window.location.protocol === 'file:') {
+          throw new Error(
+            'You opened index.html with file://. Browser security blocks loading questions.json this way. Run a local server in this folder: python -m http.server 8000, then open http://localhost:8000',
+          );
+        }
         const errors = [];
         for (const path of DATA_PATHS) {
           try {
@@ -650,21 +642,18 @@
         }
         throw new Error(errors.join(' | '));
       }
-
       function readBookmarks() {
         try {
           const raw = localStorage.getItem(BOOKMARK_KEY);
           const parsed = raw ? JSON.parse(raw) : [];
           return Array.isArray(parsed) ? parsed : [];
-        } catch {
+        } catch (_a) {
           return [];
         }
       }
-
       function saveBookmarks(ids) {
         localStorage.setItem(BOOKMARK_KEY, JSON.stringify(ids));
       }
-
       function buildSections(questions) {
         const map = new Map();
         questions.forEach((q) => {
@@ -679,7 +668,6 @@
         });
         return [...map.values()].sort((a, b) => a.name.localeCompare(b.name));
       }
-
       function FilterPanel({
         excludeReview,
         setExcludeReview,
@@ -694,57 +682,104 @@
       }) {
         function handleExcludeChange(e) {
           setExcludeReview(e.target.checked);
-          onFilterChangeSideEffect?.();
+          onFilterChangeSideEffect === null ||
+          onFilterChangeSideEffect === void 0
+            ? void 0
+            : onFilterChangeSideEffect();
         }
         function handleSearchChange(e) {
           setSearch(e.target.value);
-          onFilterChangeSideEffect?.();
+          onFilterChangeSideEffect === null ||
+          onFilterChangeSideEffect === void 0
+            ? void 0
+            : onFilterChangeSideEffect();
         }
-        return (
-          <section className='panel'>
-            <div className='toolbar'>
-              <div className='field span-5'>
-                <label>Search in questions/options</label>
-                <input
-                  value={search}
-                  onChange={handleSearchChange}
-                  type='search'
-                  placeholder='Example: OSPF, IPv6, token bucket'
-                />
-              </div>
-              <div className='field span-4'>
-                <span className='field-label'>Quality filter</span>
-                <label className='checkbox-row'>
-                  <input
-                    type='checkbox'
-                    checked={excludeReview}
-                    onChange={handleExcludeChange}
-                  />
-                  Exclude manual / OCR review questions
-                </label>
-              </div>
-              <div className='field span-3'>
-                <span className='field-label'>Loaded from</span>
-                <div className='checkbox-row' style={{ fontWeight: 700 }}>
-                  {dataPath}
-                </div>
-              </div>
-            </div>
-            <div className='stats'>
-              <span className='pill'>Current pool: {filteredCount}</span>
-              <span className='pill'>Total loaded: {totalCount}</span>
-              <span className='pill good'>Answerable: {answerableCount}</span>
-              <span className='pill warn'>Review/OCR: {reviewCount}</span>
-            </div>
-            <p className='small-note'>
-              In this React version, changing the checkbox/search recalculates
-              the pool, rebuilds section counts, and clears old generated
-              exams/practice sessions so stale questions cannot remain.
-            </p>
-          </section>
+        return React.createElement(
+          'section',
+          { className: 'panel' },
+          React.createElement(
+            'div',
+            { className: 'toolbar' },
+            React.createElement(
+              'div',
+              { className: 'field span-5' },
+              React.createElement('label', null, 'Search in questions/options'),
+              React.createElement('input', {
+                value: search,
+                onChange: handleSearchChange,
+                type: 'search',
+                placeholder: 'Example: OSPF, IPv6, token bucket',
+              }),
+            ),
+            React.createElement(
+              'div',
+              { className: 'field span-4' },
+              React.createElement(
+                'span',
+                { className: 'field-label' },
+                'Quality filter',
+              ),
+              React.createElement(
+                'label',
+                { className: 'checkbox-row' },
+                React.createElement('input', {
+                  type: 'checkbox',
+                  checked: excludeReview,
+                  onChange: handleExcludeChange,
+                }),
+                'Exclude manual / OCR review questions',
+              ),
+            ),
+            React.createElement(
+              'div',
+              { className: 'field span-3' },
+              React.createElement(
+                'span',
+                { className: 'field-label' },
+                'Loaded from',
+              ),
+              React.createElement(
+                'div',
+                { className: 'checkbox-row', style: { fontWeight: 700 } },
+                dataPath,
+              ),
+            ),
+          ),
+          React.createElement(
+            'div',
+            { className: 'stats' },
+            React.createElement(
+              'span',
+              { className: 'pill' },
+              'Current pool: ',
+              filteredCount,
+            ),
+            React.createElement(
+              'span',
+              { className: 'pill' },
+              'Total loaded: ',
+              totalCount,
+            ),
+            React.createElement(
+              'span',
+              { className: 'pill good' },
+              'Answerable: ',
+              answerableCount,
+            ),
+            React.createElement(
+              'span',
+              { className: 'pill warn' },
+              'Review/OCR: ',
+              reviewCount,
+            ),
+          ),
+          React.createElement(
+            'p',
+            { className: 'small-note' },
+            'In this React version, changing the checkbox/search recalculates the pool, rebuilds section counts, and clears old generated exams/practice sessions so stale questions cannot remain.',
+          ),
         );
       }
-
       function ModeSelector({ mode, setMode, bookmarkCount }) {
         const modes = [
           {
@@ -763,51 +798,62 @@
             desc: 'Review questions saved in this browser. Bookmarks work across tabs.',
           },
         ];
-        return (
-          <section className='panel'>
-            <div className='nav-grid'>
-              {modes.map((item) => (
-                <button
-                  key={item.id}
-                  className={`mode-card ${mode === item.id ? 'active' : ''}`}
-                  onClick={() => setMode(item.id)}
-                >
-                  <h2>{item.title}</h2>
-                  <p>{item.desc}</p>
-                </button>
-              ))}
-            </div>
-          </section>
+        return React.createElement(
+          'section',
+          { className: 'panel' },
+          React.createElement(
+            'div',
+            { className: 'nav-grid' },
+            modes.map((item) =>
+              React.createElement(
+                'button',
+                {
+                  key: item.id,
+                  className: `mode-card ${mode === item.id ? 'active' : ''}`,
+                  onClick: () => setMode(item.id),
+                },
+                React.createElement('h2', null, item.title),
+                React.createElement('p', null, item.desc),
+              ),
+            ),
+          ),
         );
       }
-
       function BookmarkButton({ id, bookmarks, toggleBookmark }) {
         const active = bookmarks.includes(id);
-        return (
-          <button
-            className={`bookmark-btn ${active ? 'active' : ''}`}
-            onClick={() => toggleBookmark(id)}
-            type='button'
-          >
-            {active ? '★ Bookmarked' : '☆ Bookmark'}
-          </button>
+        return React.createElement(
+          'button',
+          {
+            className: `bookmark-btn ${active ? 'active' : ''}`,
+            onClick: () => toggleBookmark(id),
+            type: 'button',
+          },
+          active ? '★ Bookmarked' : '☆ Bookmark',
         );
       }
-
       function QuestionMeta({ q }) {
-        return (
-          <div className='question-meta'>
-            <span className='pill'>{q._section}</span>
-            {q.source && <span className='pill'>{q.source}</span>}
-            {q.page && <span className='pill'>Page {q.page}</span>}
-            {q._review && <span className='pill warn'>Review/OCR</span>}
-            {!q._answerable && (
-              <span className='pill bad'>No verified answer</span>
-            )}
-          </div>
+        return React.createElement(
+          'div',
+          { className: 'question-meta' },
+          React.createElement('span', { className: 'pill' }, q._section),
+          q.source &&
+            React.createElement('span', { className: 'pill' }, q.source),
+          q.page &&
+            React.createElement('span', { className: 'pill' }, 'Page ', q.page),
+          q._review &&
+            React.createElement(
+              'span',
+              { className: 'pill warn' },
+              'Review/OCR',
+            ),
+          !q._answerable &&
+            React.createElement(
+              'span',
+              { className: 'pill bad' },
+              'No verified answer',
+            ),
         );
       }
-
       function ExamQuestion({
         q,
         index,
@@ -817,60 +863,74 @@
         bookmarks,
         toggleBookmark,
       }) {
-        return (
-          <article className='question-card'>
-            <div className='question-top'>
-              <div>
-                <QuestionMeta q={q} />
-                <div className='question-text'>
-                  Q{index + 1}. {q.question}
-                </div>
-              </div>
-              <BookmarkButton
-                id={q.id}
-                bookmarks={bookmarks}
-                toggleBookmark={toggleBookmark}
-              />
-            </div>
-            <div className='options'>
-              {q._playOptions.map((opt, i) => {
-                const isCorrect = i === q._playAnswerIndex;
-                const isSelected = selectedIndex === i;
-                let className = 'option';
-                if (submitted && isCorrect) className += ' correct';
-                if (submitted && isSelected && !isCorrect)
-                  className += ' wrong';
-                if (submitted) className += ' disabled';
-                return (
-                  <label className={className} key={`${q.id}-${i}`}>
-                    <input
-                      type='radio'
-                      name={`exam-${q.id}`}
-                      checked={selectedIndex === i}
-                      disabled={submitted}
-                      onChange={() => onSelect(q.id, i)}
-                    />
-                    <span>{opt.text}</span>
-                  </label>
-                );
-              })}
-            </div>
-            {submitted &&
-              selectedIndex !== undefined &&
-              selectedIndex !== q._playAnswerIndex && (
-                <div className='feedback bad'>
-                  Correct answer: {q._correctText}
-                </div>
-              )}
-            {submitted && selectedIndex === undefined && (
-              <div className='feedback warn'>
-                Not answered. Correct answer: {q._correctText}
-              </div>
-            )}
-          </article>
+        return React.createElement(
+          'article',
+          { className: 'question-card' },
+          React.createElement(
+            'div',
+            { className: 'question-top' },
+            React.createElement(
+              'div',
+              null,
+              React.createElement(QuestionMeta, { q: q }),
+              React.createElement(
+                'div',
+                { className: 'question-text' },
+                'Q',
+                index + 1,
+                '. ',
+                q.question,
+              ),
+            ),
+            React.createElement(BookmarkButton, {
+              id: q.id,
+              bookmarks: bookmarks,
+              toggleBookmark: toggleBookmark,
+            }),
+          ),
+          React.createElement(
+            'div',
+            { className: 'options' },
+            q._playOptions.map((opt, i) => {
+              const isCorrect = i === q._playAnswerIndex;
+              const isSelected = selectedIndex === i;
+              let className = 'option';
+              if (submitted && isCorrect) className += ' correct';
+              if (submitted && isSelected && !isCorrect) className += ' wrong';
+              if (submitted) className += ' disabled';
+              return React.createElement(
+                'label',
+                { className: className, key: `${q.id}-${i}` },
+                React.createElement('input', {
+                  type: 'radio',
+                  name: `exam-${q.id}`,
+                  checked: selectedIndex === i,
+                  disabled: submitted,
+                  onChange: () => onSelect(q.id, i),
+                }),
+                React.createElement('span', null, opt.text),
+              );
+            }),
+          ),
+          submitted &&
+            selectedIndex !== undefined &&
+            selectedIndex !== q._playAnswerIndex &&
+            React.createElement(
+              'div',
+              { className: 'feedback bad' },
+              'Correct answer: ',
+              q._correctText,
+            ),
+          submitted &&
+            selectedIndex === undefined &&
+            React.createElement(
+              'div',
+              { className: 'feedback warn' },
+              'Not answered. Correct answer: ',
+              q._correctText,
+            ),
         );
       }
-
       function ExamMode({
         questions,
         sections,
@@ -883,23 +943,19 @@
         const [examQuestions, setExamQuestions] = useState([]);
         const [answers, setAnswers] = useState({});
         const [submitted, setSubmitted] = useState(false);
-
         const sectionSignature = useMemo(
           () => sections.map((s) => s.id).join('|'),
           [sections],
         );
-
         function clearGeneratedExam() {
           setExamQuestions([]);
           setAnswers({});
           setSubmitted(false);
         }
-
         useEffect(() => {
           setSelectedSectionIds(sections.map((s) => s.id));
           clearGeneratedExam();
         }, [resetSignal, sectionSignature]);
-
         const sectionCounts = useMemo(() => {
           const counts = new Map();
           questions.forEach((q) => {
@@ -908,7 +964,6 @@
           });
           return counts;
         }, [questions]);
-
         const allSectionIds = useMemo(
           () => sections.map((s) => s.id),
           [sections],
@@ -916,7 +971,6 @@
         const allSelected =
           allSectionIds.length > 0 &&
           allSectionIds.every((id) => selectedSectionIds.includes(id));
-
         const pool = useMemo(() => {
           const selected = new Set(selectedSectionIds);
           return questions.filter(
@@ -926,7 +980,6 @@
               selected.has(q._sectionId),
           );
         }, [questions, selectedSectionIds]);
-
         function buildBalancedExamSelection() {
           const target = Math.min(Number(count) || 1, pool.length);
           const groups = new Map();
@@ -934,7 +987,6 @@
             if (!groups.has(q._sectionId)) groups.set(q._sectionId, []);
             groups.get(q._sectionId).push(q);
           });
-
           const sectionOrder = shuffle(
             selectedSectionIds.filter(
               (id) => (groups.get(id) || []).length > 0,
@@ -944,17 +996,14 @@
           sectionOrder.forEach((id) => {
             groups.set(id, shuffle(groups.get(id) || []));
           });
-
           let remaining = target;
           let availableSectionIds = sectionOrder;
-
           while (remaining > 0 && availableSectionIds.length > 0) {
             const perSection = Math.floor(
               remaining / availableSectionIds.length,
             );
             let extra = remaining % availableSectionIds.length;
             let usedThisRound = 0;
-
             availableSectionIds = shuffle(availableSectionIds).filter((id) => {
               const alreadyTaken = quotas.get(id) || 0;
               const availableLeft =
@@ -973,10 +1022,8 @@
               usedThisRound += take;
               return availableLeft - take > 0;
             });
-
             if (usedThisRound === 0) break;
           }
-
           const selected = [];
           sectionOrder.forEach((id) => {
             const quota = quotas.get(id) || 0;
@@ -984,7 +1031,6 @@
           });
           return shuffle(selected);
         }
-
         function generateExam() {
           const selected = buildBalancedExamSelection().map(
             buildPlayableQuestion,
@@ -993,7 +1039,6 @@
           setAnswers({});
           setSubmitted(false);
         }
-
         function toggleSection(sectionId) {
           setSelectedSectionIds((prev) => {
             const next = prev.includes(sectionId)
@@ -1003,21 +1048,17 @@
           });
           clearGeneratedExam();
         }
-
         function selectAllSections() {
           setSelectedSectionIds(allSectionIds);
           clearGeneratedExam();
         }
-
         function clearSections() {
           setSelectedSectionIds([]);
           clearGeneratedExam();
         }
-
         function selectAnswer(id, idx) {
           setAnswers((prev) => ({ ...prev, [id]: idx }));
         }
-
         const score = useMemo(() => {
           let correct = 0,
             wrong = 0,
@@ -1030,7 +1071,6 @@
           });
           return { correct, wrong, unanswered, total: correct - wrong * 0.33 };
         }, [answers, examQuestions]);
-
         const generatedDistribution = useMemo(() => {
           const counts = new Map();
           examQuestions.forEach((q) => {
@@ -1041,148 +1081,213 @@
             .map((s) => `${s.name}: ${counts.get(s.id)}`)
             .join(' • ');
         }, [examQuestions, sections]);
-
-        return (
-          <section className='panel'>
-            <h2>Simulate real exam</h2>
-            <div className='toolbar'>
-              <div className='field span-8'>
-                <label>Topics / sections</label>
-                <div className='topic-grid'>
-                  {sections.map((s) => {
-                    const countForSection = sectionCounts.get(s.id) || 0;
-                    return (
-                      <label className='topic-option' key={s.id}>
-                        <input
-                          type='checkbox'
-                          checked={selectedSectionIds.includes(s.id)}
-                          onChange={() => toggleSection(s.id)}
-                          disabled={countForSection === 0}
-                        />
-                        <span>
-                          <span className='topic-name'>{s.name}</span>
-                          <span className='topic-count'>
-                            {countForSection} available questions
-                          </span>
-                        </span>
-                      </label>
-                    );
-                  })}
-                </div>
-                <div className='topic-actions'>
-                  <button
-                    type='button'
-                    className='ghost'
-                    onClick={selectAllSections}
-                    disabled={allSelected}
-                  >
-                    Select all topics
-                  </button>
-                  <button
-                    type='button'
-                    className='ghost'
-                    onClick={clearSections}
-                    disabled={selectedSectionIds.length === 0}
-                  >
-                    Clear topics
-                  </button>
-                </div>
-                <p className='small-note'>
-                  For Part 1, choose one or more topics. The exam will be
-                  balanced as evenly as possible across the selected topics. If
-                  one topic does not have enough questions, the rest will be
-                  filled from the other selected topics.
-                </p>
-              </div>
-              <div className='field span-2'>
-                <label>Questions</label>
-                <input
-                  type='number'
-                  min='1'
-                  max={pool.length || 1}
-                  value={count}
-                  onChange={(e) => setCount(e.target.value)}
-                />
-              </div>
-              <div className='field span-2'>
-                <button onClick={generateExam} disabled={pool.length === 0}>
-                  Generate exam
-                </button>
-              </div>
-            </div>
-            <div className='stats'>
-              <span className='pill'>
-                Selected topics: {selectedSectionIds.length} / {sections.length}
-              </span>
-              <span className='pill'>
-                Available for this exam: {pool.length}
-              </span>
-              <span className='pill'>Generated: {examQuestions.length}</span>
-              <span className='pill warn'>Score: +1 / -0.33 / 0</span>
-            </div>
-            {generatedDistribution && (
-              <p className='small-note'>
-                Generated distribution: {generatedDistribution}
-              </p>
-            )}
-
-            {examQuestions.length === 0 ? (
-              <div className='empty'>
-                Choose one or more topics, then generate an exam. If the pool is
-                empty, change the selected topics or the global filters above.
-              </div>
-            ) : (
-              <>
-                {submitted && (
-                  <div className='score-box'>
-                    <div className='score-item'>
-                      <strong>{score.total.toFixed(2)}</strong>
-                      <span>Final score</span>
-                    </div>
-                    <div className='score-item'>
-                      <strong>{score.correct}</strong>
-                      <span>Correct</span>
-                    </div>
-                    <div className='score-item'>
-                      <strong>{score.wrong}</strong>
-                      <span>Wrong</span>
-                    </div>
-                    <div className='score-item'>
-                      <strong>{score.unanswered}</strong>
-                      <span>Unanswered</span>
-                    </div>
-                  </div>
-                )}
-                <div className='actions'>
-                  {!submitted && (
-                    <button onClick={() => setSubmitted(true)}>
-                      Submit exam
-                    </button>
-                  )}
-                  <button className='ghost' onClick={generateExam}>
-                    Regenerate
-                  </button>
-                </div>
-                <div style={{ marginTop: 14 }}>
-                  {examQuestions.map((q, i) => (
-                    <ExamQuestion
-                      key={q.id}
-                      q={q}
-                      index={i}
-                      selectedIndex={answers[q.id]}
-                      onSelect={selectAnswer}
-                      submitted={submitted}
-                      bookmarks={bookmarks}
-                      toggleBookmark={toggleBookmark}
-                    />
-                  ))}
-                </div>
-              </>
-            )}
-          </section>
+        return React.createElement(
+          'section',
+          { className: 'panel' },
+          React.createElement('h2', null, 'Simulate real exam'),
+          React.createElement(
+            'div',
+            { className: 'toolbar' },
+            React.createElement(
+              'div',
+              { className: 'field span-8' },
+              React.createElement('label', null, 'Topics / sections'),
+              React.createElement(
+                'div',
+                { className: 'topic-grid' },
+                sections.map((s) => {
+                  const countForSection = sectionCounts.get(s.id) || 0;
+                  return React.createElement(
+                    'label',
+                    { className: 'topic-option', key: s.id },
+                    React.createElement('input', {
+                      type: 'checkbox',
+                      checked: selectedSectionIds.includes(s.id),
+                      onChange: () => toggleSection(s.id),
+                      disabled: countForSection === 0,
+                    }),
+                    React.createElement(
+                      'span',
+                      null,
+                      React.createElement(
+                        'span',
+                        { className: 'topic-name' },
+                        s.name,
+                      ),
+                      React.createElement(
+                        'span',
+                        { className: 'topic-count' },
+                        countForSection,
+                        ' available questions',
+                      ),
+                    ),
+                  );
+                }),
+              ),
+              React.createElement(
+                'div',
+                { className: 'topic-actions' },
+                React.createElement(
+                  'button',
+                  {
+                    type: 'button',
+                    className: 'ghost',
+                    onClick: selectAllSections,
+                    disabled: allSelected,
+                  },
+                  'Select all topics',
+                ),
+                React.createElement(
+                  'button',
+                  {
+                    type: 'button',
+                    className: 'ghost',
+                    onClick: clearSections,
+                    disabled: selectedSectionIds.length === 0,
+                  },
+                  'Clear topics',
+                ),
+              ),
+              React.createElement(
+                'p',
+                { className: 'small-note' },
+                'For Part 1, choose one or more topics. The exam will be balanced as evenly as possible across the selected topics. If one topic does not have enough questions, the rest will be filled from the other selected topics.',
+              ),
+            ),
+            React.createElement(
+              'div',
+              { className: 'field span-2' },
+              React.createElement('label', null, 'Questions'),
+              React.createElement('input', {
+                type: 'number',
+                min: '1',
+                max: pool.length || 1,
+                value: count,
+                onChange: (e) => setCount(e.target.value),
+              }),
+            ),
+            React.createElement(
+              'div',
+              { className: 'field span-2' },
+              React.createElement(
+                'button',
+                { onClick: generateExam, disabled: pool.length === 0 },
+                'Generate exam',
+              ),
+            ),
+          ),
+          React.createElement(
+            'div',
+            { className: 'stats' },
+            React.createElement(
+              'span',
+              { className: 'pill' },
+              'Selected topics: ',
+              selectedSectionIds.length,
+              ' / ',
+              sections.length,
+            ),
+            React.createElement(
+              'span',
+              { className: 'pill' },
+              'Available for this exam: ',
+              pool.length,
+            ),
+            React.createElement(
+              'span',
+              { className: 'pill' },
+              'Generated: ',
+              examQuestions.length,
+            ),
+            React.createElement(
+              'span',
+              { className: 'pill warn' },
+              'Score: +1 / -0.33 / 0',
+            ),
+          ),
+          generatedDistribution &&
+            React.createElement(
+              'p',
+              { className: 'small-note' },
+              'Generated distribution: ',
+              generatedDistribution,
+            ),
+          examQuestions.length === 0
+            ? React.createElement(
+                'div',
+                { className: 'empty' },
+                'Choose one or more topics, then generate an exam. If the pool is empty, change the selected topics or the global filters above.',
+              )
+            : React.createElement(
+                React.Fragment,
+                null,
+                submitted &&
+                  React.createElement(
+                    'div',
+                    { className: 'score-box' },
+                    React.createElement(
+                      'div',
+                      { className: 'score-item' },
+                      React.createElement(
+                        'strong',
+                        null,
+                        score.total.toFixed(2),
+                      ),
+                      React.createElement('span', null, 'Final score'),
+                    ),
+                    React.createElement(
+                      'div',
+                      { className: 'score-item' },
+                      React.createElement('strong', null, score.correct),
+                      React.createElement('span', null, 'Correct'),
+                    ),
+                    React.createElement(
+                      'div',
+                      { className: 'score-item' },
+                      React.createElement('strong', null, score.wrong),
+                      React.createElement('span', null, 'Wrong'),
+                    ),
+                    React.createElement(
+                      'div',
+                      { className: 'score-item' },
+                      React.createElement('strong', null, score.unanswered),
+                      React.createElement('span', null, 'Unanswered'),
+                    ),
+                  ),
+                React.createElement(
+                  'div',
+                  { className: 'actions' },
+                  !submitted &&
+                    React.createElement(
+                      'button',
+                      { onClick: () => setSubmitted(true) },
+                      'Submit exam',
+                    ),
+                  React.createElement(
+                    'button',
+                    { className: 'ghost', onClick: generateExam },
+                    'Regenerate',
+                  ),
+                ),
+                React.createElement(
+                  'div',
+                  { style: { marginTop: 14 } },
+                  examQuestions.map((q, i) =>
+                    React.createElement(ExamQuestion, {
+                      key: q.id,
+                      q: q,
+                      index: i,
+                      selectedIndex: answers[q.id],
+                      onSelect: selectAnswer,
+                      submitted: submitted,
+                      bookmarks: bookmarks,
+                      toggleBookmark: toggleBookmark,
+                    }),
+                  ),
+                ),
+              ),
         );
       }
-
       function MasteryMode({
         questions,
         sections,
@@ -1190,22 +1295,27 @@
         toggleBookmark,
         resetSignal,
       }) {
-        const [sectionId, setSectionId] = useState(sections[0]?.id || '');
+        var _a;
+        const [sectionId, setSectionId] = useState(
+          ((_a = sections[0]) === null || _a === void 0 ? void 0 : _a.id) || '',
+        );
         const [queue, setQueue] = useState([]);
         const [index, setIndex] = useState(0);
         const [selected, setSelected] = useState(null);
         const [answered, setAnswered] = useState(false);
-
         useEffect(() => {
+          var _a;
           if (!sectionId || !sections.some((s) => s.id === sectionId)) {
-            setSectionId(sections[0]?.id || '');
+            setSectionId(
+              ((_a = sections[0]) === null || _a === void 0 ? void 0 : _a.id) ||
+                '',
+            );
           }
           setQueue([]);
           setIndex(0);
           setSelected(null);
           setAnswered(false);
         }, [resetSignal, sections.map((s) => s.id).join('|')]);
-
         const pool = useMemo(() => {
           return questions.filter(
             (q) =>
@@ -1214,14 +1324,12 @@
               q._sectionId === sectionId,
           );
         }, [questions, sectionId]);
-
         function start() {
           setQueue(shuffle(pool).map(buildPlayableQuestion));
           setIndex(0);
           setSelected(null);
           setAnswered(false);
         }
-
         function changeSection(e) {
           setSectionId(e.target.value);
           setQueue([]);
@@ -1229,83 +1337,119 @@
           setSelected(null);
           setAnswered(false);
         }
-
         function choose(i) {
           if (answered) return;
           setSelected(i);
           setAnswered(true);
         }
-
         function next() {
           setSelected(null);
           setAnswered(false);
           setIndex((prev) => Math.min(prev + 1, queue.length));
         }
-
         const current = queue[index];
-
-        return (
-          <section className='panel'>
-            <h2>Master one subject</h2>
-            <div className='toolbar'>
-              <div className='field span-8'>
-                <label>Section</label>
-                <select value={sectionId} onChange={changeSection}>
-                  {sections.map((s) => {
-                    const c = questions.filter(
-                      (q) =>
-                        q._answerable &&
-                        q.masteryEligible !== false &&
-                        q._sectionId === s.id,
-                    ).length;
-                    return (
-                      <option key={s.id} value={s.id}>
-                        {s.name} ({c})
-                      </option>
-                    );
-                  })}
-                </select>
-              </div>
-              <div className='field span-4'>
-                <button onClick={start} disabled={pool.length === 0}>
-                  Start / reshuffle subject
-                </button>
-              </div>
-            </div>
-            <div className='stats'>
-              <span className='pill'>
-                Available in selected subject: {pool.length}
-              </span>
-              <span className='pill'>Current session: {queue.length}</span>
-              {queue.length > 0 && (
-                <span className='pill'>
-                  Progress: {Math.min(index + 1, queue.length)} / {queue.length}
-                </span>
-              )}
-            </div>
-
-            {!current ? (
-              <div className='empty'>
-                Choose a subject and start. Every wrong answer immediately shows
-                the correct answer.
-              </div>
-            ) : (
-              <article className='question-card'>
-                <div className='question-top'>
-                  <div>
-                    <QuestionMeta q={current} />
-                    <div className='question-text'>
-                      Q{index + 1}. {current.question}
-                    </div>
-                  </div>
-                  <BookmarkButton
-                    id={current.id}
-                    bookmarks={bookmarks}
-                    toggleBookmark={toggleBookmark}
-                  />
-                </div>
-                <div className='options'>
-                  {current._playOptions.map((opt, i) => {
+        return React.createElement(
+          'section',
+          { className: 'panel' },
+          React.createElement('h2', null, 'Master one subject'),
+          React.createElement(
+            'div',
+            { className: 'toolbar' },
+            React.createElement(
+              'div',
+              { className: 'field span-8' },
+              React.createElement('label', null, 'Section'),
+              React.createElement(
+                'select',
+                { value: sectionId, onChange: changeSection },
+                sections.map((s) => {
+                  const c = questions.filter(
+                    (q) =>
+                      q._answerable &&
+                      q.masteryEligible !== false &&
+                      q._sectionId === s.id,
+                  ).length;
+                  return React.createElement(
+                    'option',
+                    { key: s.id, value: s.id },
+                    s.name,
+                    ' (',
+                    c,
+                    ')',
+                  );
+                }),
+              ),
+            ),
+            React.createElement(
+              'div',
+              { className: 'field span-4' },
+              React.createElement(
+                'button',
+                { onClick: start, disabled: pool.length === 0 },
+                'Start / reshuffle subject',
+              ),
+            ),
+          ),
+          React.createElement(
+            'div',
+            { className: 'stats' },
+            React.createElement(
+              'span',
+              { className: 'pill' },
+              'Available in selected subject: ',
+              pool.length,
+            ),
+            React.createElement(
+              'span',
+              { className: 'pill' },
+              'Current session: ',
+              queue.length,
+            ),
+            queue.length > 0 &&
+              React.createElement(
+                'span',
+                { className: 'pill' },
+                'Progress: ',
+                Math.min(index + 1, queue.length),
+                ' / ',
+                queue.length,
+              ),
+          ),
+          !current
+            ? React.createElement(
+                'div',
+                { className: 'empty' },
+                'Choose a subject and start. Every wrong answer immediately shows the correct answer.',
+              )
+            : React.createElement(
+                'article',
+                { className: 'question-card' },
+                React.createElement(
+                  'div',
+                  { className: 'question-top' },
+                  React.createElement(
+                    'div',
+                    null,
+                    React.createElement(QuestionMeta, { q: current }),
+                    React.createElement(
+                      'div',
+                      { className: 'question-text' },
+                      'Q',
+                      index + 1,
+                      '. ',
+                      current.question,
+                    ),
+                  ),
+                  React.createElement(BookmarkButton, {
+                    id: current.id,
+                    bookmarks: bookmarks,
+                    toggleBookmark: toggleBookmark,
+                  }),
+                ),
+                React.createElement(
+                  'div',
+                  { className: 'options' },
+                  current._playOptions.map((opt, i) => {
                     const isCorrect = i === current._playAnswerIndex;
                     const isSelected = selected === i;
                     let className = 'option';
@@ -1313,42 +1457,56 @@
                     if (answered && isSelected && !isCorrect)
                       className += ' wrong';
                     if (answered) className += ' disabled';
-                    return (
-                      <label className={className} key={`${current.id}-${i}`}>
-                        <input
-                          type='radio'
-                          name={`mastery-${current.id}`}
-                          checked={selected === i}
-                          disabled={answered}
-                          onChange={() => choose(i)}
-                        />
-                        <span>{opt.text}</span>
-                      </label>
+                    return React.createElement(
+                      'label',
+                      { className: className, key: `${current.id}-${i}` },
+                      React.createElement('input', {
+                        type: 'radio',
+                        name: `mastery-${current.id}`,
+                        checked: selected === i,
+                        disabled: answered,
+                        onChange: () => choose(i),
+                      }),
+                      React.createElement('span', null, opt.text),
                     );
-                  })}
-                </div>
-                {answered && selected === current._playAnswerIndex && (
-                  <div className='feedback good'>Correct.</div>
-                )}
-                {answered && selected !== current._playAnswerIndex && (
-                  <div className='feedback bad'>
-                    Wrong. Correct answer: {current._correctText}
-                  </div>
-                )}
-                <div className='actions'>
-                  {answered && index < queue.length - 1 && (
-                    <button onClick={next}>Next question</button>
-                  )}
-                  {answered && index >= queue.length - 1 && (
-                    <button onClick={start}>Restart subject shuffled</button>
-                  )}
-                </div>
-              </article>
-            )}
-          </section>
+                  }),
+                ),
+                answered &&
+                  selected === current._playAnswerIndex &&
+                  React.createElement(
+                    'div',
+                    { className: 'feedback good' },
+                    'Correct.',
+                  ),
+                answered &&
+                  selected !== current._playAnswerIndex &&
+                  React.createElement(
+                    'div',
+                    { className: 'feedback bad' },
+                    'Wrong. Correct answer: ',
+                    current._correctText,
+                  ),
+                React.createElement(
+                  'div',
+                  { className: 'actions' },
+                  answered &&
+                    index < queue.length - 1 &&
+                    React.createElement(
+                      'button',
+                      { onClick: next },
+                      'Next question',
+                    ),
+                  answered &&
+                    index >= queue.length - 1 &&
+                    React.createElement(
+                      'button',
+                      { onClick: start },
+                      'Restart subject shuffled',
+                    ),
+                ),
+              ),
         );
       }
-
       function BookmarkMode({ questions, bookmarks, toggleBookmark }) {
         const bookmarkedQuestions = useMemo(() => {
           const byId = new Map(questions.map((q) => [q.id, q]));
@@ -1357,55 +1515,77 @@
             .filter(Boolean)
             .map(buildPlayableQuestion);
         }, [questions, bookmarks]);
-
         const [answers, setAnswers] = useState({});
-
         useEffect(() => setAnswers({}), [bookmarks.join('|')]);
-
         if (bookmarks.length === 0) {
-          return (
-            <section className='panel'>
-              <h2>Bookmarked questions</h2>
-              <div className='empty'>
-                No bookmarks yet. Use the star button in exam or mastery mode.
-              </div>
-            </section>
+          return React.createElement(
+            'section',
+            { className: 'panel' },
+            React.createElement('h2', null, 'Bookmarked questions'),
+            React.createElement(
+              'div',
+              { className: 'empty' },
+              'No bookmarks yet. Use the star button in exam or mastery mode.',
+            ),
           );
         }
-
-        return (
-          <section className='panel'>
-            <h2>Bookmarked questions</h2>
-            <div className='stats'>
-              <span className='pill'>Saved IDs: {bookmarks.length}</span>
-              <span className='pill'>
-                Available after current filter/search:{' '}
-                {bookmarkedQuestions.length}
-              </span>
-            </div>
-            {bookmarkedQuestions.length === 0 ? (
-              <div className='empty'>
-                Your bookmarks exist, but the current filter/search hides them.
-                Disable the review filter or clear search.
-              </div>
-            ) : (
-              bookmarkedQuestions.map((q, idx) => (
-                <article className='question-card' key={q.id}>
-                  <div className='question-top'>
-                    <div>
-                      <QuestionMeta q={q} />
-                      <div className='question-text'>
-                        Q{idx + 1}. {q.question}
-                      </div>
-                    </div>
-                    <BookmarkButton
-                      id={q.id}
-                      bookmarks={bookmarks}
-                      toggleBookmark={toggleBookmark}
-                    />
-                  </div>
-                  <div className='options'>
-                    {q._playOptions.map((opt, i) => {
+        return React.createElement(
+          'section',
+          { className: 'panel' },
+          React.createElement('h2', null, 'Bookmarked questions'),
+          React.createElement(
+            'div',
+            { className: 'stats' },
+            React.createElement(
+              'span',
+              { className: 'pill' },
+              'Saved IDs: ',
+              bookmarks.length,
+            ),
+            React.createElement(
+              'span',
+              { className: 'pill' },
+              'Available after current filter/search:',
+              ' ',
+              bookmarkedQuestions.length,
+            ),
+          ),
+          bookmarkedQuestions.length === 0
+            ? React.createElement(
+                'div',
+                { className: 'empty' },
+                'Your bookmarks exist, but the current filter/search hides them. Disable the review filter or clear search.',
+              )
+            : bookmarkedQuestions.map((q, idx) =>
+                React.createElement(
+                  'article',
+                  { className: 'question-card', key: q.id },
+                  React.createElement(
+                    'div',
+                    { className: 'question-top' },
+                    React.createElement(
+                      'div',
+                      null,
+                      React.createElement(QuestionMeta, { q: q }),
+                      React.createElement(
+                        'div',
+                        { className: 'question-text' },
+                        'Q',
+                        idx + 1,
+                        '. ',
+                        q.question,
+                      ),
+                    ),
+                    React.createElement(BookmarkButton, {
+                      id: q.id,
+                      bookmarks: bookmarks,
+                      toggleBookmark: toggleBookmark,
+                    }),
+                  ),
+                  React.createElement(
+                    'div',
+                    { className: 'options' },
+                    q._playOptions.map((opt, i) => {
                       const selected = answers[q.id];
                       const answered = selected !== undefined;
                       const isCorrect = i === q._playAnswerIndex;
@@ -1415,39 +1595,40 @@
                       if (answered && isSelected && !isCorrect)
                         className += ' wrong';
                       if (answered) className += ' disabled';
-                      return (
-                        <label className={className} key={`${q.id}-${i}`}>
-                          <input
-                            type='radio'
-                            name={`bookmark-${q.id}`}
-                            checked={selected === i}
-                            disabled={answered}
-                            onChange={() =>
-                              setAnswers((prev) => ({ ...prev, [q.id]: i }))
-                            }
-                          />
-                          <span>{opt.text}</span>
-                        </label>
+                      return React.createElement(
+                        'label',
+                        { className: className, key: `${q.id}-${i}` },
+                        React.createElement('input', {
+                          type: 'radio',
+                          name: `bookmark-${q.id}`,
+                          checked: selected === i,
+                          disabled: answered,
+                          onChange: () =>
+                            setAnswers((prev) => ({ ...prev, [q.id]: i })),
+                        }),
+                        React.createElement('span', null, opt.text),
                       );
-                    })}
-                  </div>
-                  {answers[q.id] !== undefined &&
-                    answers[q.id] === q._playAnswerIndex && (
-                      <div className='feedback good'>Correct.</div>
-                    )}
-                  {answers[q.id] !== undefined &&
-                    answers[q.id] !== q._playAnswerIndex && (
-                      <div className='feedback bad'>
-                        Wrong. Correct answer: {q._correctText}
-                      </div>
-                    )}
-                </article>
-              ))
-            )}
-          </section>
+                    }),
+                  ),
+                  answers[q.id] !== undefined &&
+                    answers[q.id] === q._playAnswerIndex &&
+                    React.createElement(
+                      'div',
+                      { className: 'feedback good' },
+                      'Correct.',
+                    ),
+                  answers[q.id] !== undefined &&
+                    answers[q.id] !== q._playAnswerIndex &&
+                    React.createElement(
+                      'div',
+                      { className: 'feedback bad' },
+                      'Wrong. Correct answer: ',
+                      q._correctText,
+                    ),
+                ),
+              ),
         );
       }
-
       function App() {
         const [loading, setLoading] = useState(true);
         const [error, setError] = useState('');
@@ -1458,7 +1639,6 @@
         const [search, setSearch] = useState('');
         const [bookmarks, setBookmarks] = useState(readBookmarks);
         const [resetSignal, setResetSignal] = useState(0);
-
         useEffect(() => {
           loadQuestionBank()
             .then((result) => {
@@ -1471,11 +1651,9 @@
               setLoading(false);
             });
         }, []);
-
         function forceResetGeneratedPools() {
           setResetSignal((prev) => prev + 1);
         }
-
         const filteredQuestions = useMemo(() => {
           const term = normalizeText(search).toLowerCase();
           return rawQuestions.filter((q) => {
@@ -1488,7 +1666,6 @@
             return haystack.includes(term);
           });
         }, [rawQuestions, excludeReview, search]);
-
         const answerableFiltered = useMemo(
           () => filteredQuestions.filter(isAnswerable),
           [filteredQuestions],
@@ -1501,7 +1678,6 @@
           () => rawQuestions.filter((q) => q._review).length,
           [rawQuestions],
         );
-
         function toggleBookmark(id) {
           setBookmarks((prev) => {
             const next = prev.includes(id)
@@ -1511,70 +1687,72 @@
             return next;
           });
         }
-
         if (loading)
-          return <div className='loading'>Loading question bank...</div>;
-        if (error)
-          return (
-            <div className='error'>
-              <strong>Could not load questions.</strong>
-              <br />
-              {error}
-              <br />
-              <br />
-              Make sure the file exists at <code>data/questions.json</code>.
-            </div>
+          return React.createElement(
+            'div',
+            { className: 'loading' },
+            'Loading question bank...',
           );
-
-        return (
-          <>
-            <ModeSelector
-              mode={mode}
-              setMode={setMode}
-              bookmarkCount={bookmarks.length}
-            />
-            <FilterPanel
-              excludeReview={excludeReview}
-              setExcludeReview={setExcludeReview}
-              search={search}
-              setSearch={setSearch}
-              filteredCount={filteredQuestions.length}
-              totalCount={rawQuestions.length}
-              answerableCount={answerableFiltered.length}
-              reviewCount={reviewCount}
-              dataPath={dataPath}
-              onFilterChangeSideEffect={forceResetGeneratedPools}
-            />
-            {mode === 'exam' && (
-              <ExamMode
-                questions={answerableFiltered}
-                sections={sections}
-                bookmarks={bookmarks}
-                toggleBookmark={toggleBookmark}
-                resetSignal={resetSignal}
-              />
-            )}
-            {mode === 'mastery' && (
-              <MasteryMode
-                questions={answerableFiltered}
-                sections={sections}
-                bookmarks={bookmarks}
-                toggleBookmark={toggleBookmark}
-                resetSignal={resetSignal}
-              />
-            )}
-            {mode === 'bookmarks' && (
-              <BookmarkMode
-                questions={answerableFiltered}
-                bookmarks={bookmarks}
-                toggleBookmark={toggleBookmark}
-              />
-            )}
-          </>
+        if (error)
+          return React.createElement(
+            'div',
+            { className: 'error' },
+            React.createElement('strong', null, 'Could not load questions.'),
+            React.createElement('br', null),
+            error,
+            React.createElement('br', null),
+            React.createElement('br', null),
+            'Make sure the file exists at ',
+            React.createElement('code', null, 'data/questions.json'),
+            '.',
+          );
+        return React.createElement(
+          React.Fragment,
+          null,
+          React.createElement(ModeSelector, {
+            mode: mode,
+            setMode: setMode,
+            bookmarkCount: bookmarks.length,
+          }),
+          React.createElement(FilterPanel, {
+            excludeReview: excludeReview,
+            setExcludeReview: setExcludeReview,
+            search: search,
+            setSearch: setSearch,
+            filteredCount: filteredQuestions.length,
+            totalCount: rawQuestions.length,
+            answerableCount: answerableFiltered.length,
+            reviewCount: reviewCount,
+            dataPath: dataPath,
+            onFilterChangeSideEffect: forceResetGeneratedPools,
+          }),
+          mode === 'exam' &&
+            React.createElement(ExamMode, {
+              questions: answerableFiltered,
+              sections: sections,
+              bookmarks: bookmarks,
+              toggleBookmark: toggleBookmark,
+              resetSignal: resetSignal,
+            }),
+          mode === 'mastery' &&
+            React.createElement(MasteryMode, {
+              questions: answerableFiltered,
+              sections: sections,
+              bookmarks: bookmarks,
+              toggleBookmark: toggleBookmark,
+              resetSignal: resetSignal,
+            }),
+          mode === 'bookmarks' &&
+            React.createElement(BookmarkMode, {
+              questions: answerableFiltered,
+              bookmarks: bookmarks,
+              toggleBookmark: toggleBookmark,
+            }),
         );
       }
-
-      ReactDOM.createRoot(document.getElementById('root')).render(<App />);
+      ReactDOM.createRoot(document.getElementById('root')).render(
+        React.createElement(App, null),
+      );
     </script>
   </body>
 </html>
